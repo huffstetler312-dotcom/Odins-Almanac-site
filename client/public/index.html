@@ -1,139 +1,23 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Viking Restaurant Consultants LLC | Odin’s Almanac</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Viking Restaurant Consultants LLC — Odin’s Almanac: Odin’s Eye (P&L Converter), Prep & Plate, and Allwise Navigator.">
-  <style>
-    :root{
-      --primary:#0b3b4a; /* deep teal */
-      --accent:#cba35d;  /* gold */
-      --dark:#0a0f14;
-      --light:#f6f7f9;
-      --text:#1e2329;
-    }
-    *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif;color:var(--text);background:var(--light)}
-    a{color:var(--primary);text-decoration:none}
-    header{background:linear-gradient(135deg,var(--primary),#092b36);color:#fff}
-    .container{max-width:1100px;margin:0 auto;padding:24px}
-    .nav{display:flex;align-items:center;justify-content:space-between}
-    .brand{display:flex;align-items:center;gap:12px}
-    .brand img{height:40px;width:40px;object-fit:contain;border-radius:4px;background:#fff}
-    .brand span{font-weight:700;letter-spacing:.4px}
-    .cta a{background:var(--accent);color:#1a1a1a;padding:10px 16px;border-radius:6px;font-weight:600}
-    .hero{padding:56px 0 40px}
-    .hero h1{margin:0 0 12px;font-size:40px;color:#fff}
-    .hero p{max-width:680px;opacity:.9;font-size:18px}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:22px}
-    .card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:18px}
-    .card h3{margin:0 0 8px}
-    .card p{margin:6px 0 0}
-    .section{padding:36px 0}
-    .pricing .plan{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:18px}
-    .btn{display:inline-block;background:var(--primary);color:#fff;padding:10px 16px;border-radius:6px}
-    footer{padding:24px 0;background:#0e1116;color:#cbd5e1}
-    .fine{font-size:12px;color:#64748b}
-  </style>
-</head>
-<body>
-  <header>
-    <div class="container nav">
-      <div class="brand">
-        <img src="LOGO_URL" alt="Viking RC Logo">
-        <span>Viking Restaurant Consultants LLC</span>
-      </div>
-      <div class="cta">
-        <a class="btn" href="#" id="subscribeBtn" style="background:var(--accent);color:#1a1a1a">Start subscription</a>
-<script>
-  document.getElementById('subscribeBtn').addEventListener('click', async (e)=>{
-    e.preventDefault();
-    try {
-      const res = await fetch('/api/stripe/create-checkout-session', { method:'POST' });
-      const data = await res.json();
-      if (data.url) {
-        window.location = data.url; // Redirects to Stripe Checkout
-      } else {
-        alert('Could not start checkout. Check server logs.');
-      }
-    } catch(err) {
-      console.error(err);
-      alert('Network error starting checkout.');
-    }
-  });
-</script>
-      </div>
-    </div>
-    <div class="container hero">
-      <h1>Odin’s Almanac</h1>
-      <p>Modern tools for restaurants: Odin’s Eye (P&L Converter), Prep & Plate (menu costing and prep), and Allwise Navigator (operations guidance). Built for clarity, speed, and control.</p>
-      <div style="margin-top:14px">
-        <a class="btn" href="#products">Explore Products</a>
-        <a class="btn" style="background:var(--accent);color:#1a1a1a;margin-left:8px" href="#pricing">See Pricing</a>
-      </div>
-    </div>
-  </header>
-
-    <div class="container section" id="products">
-      <h2>Products</h2>
-      <div class="grid">
-        <div class="card">
-          <h3>Odin’s Eye — P&L Converter</h3>
-          <p>Upload your Trial Balance, map accounts once, and generate a clean, locked P&amp;L each month for stakeholders. Excel and Google Sheets supported.</p>
-        </div>
-        <div class="card">
-          <h3>Prep &amp; Plate</h3>
-          <p>Recipe and menu costing with prep lists, yields, and variance tracking to protect margins.</p>
-        </div>
-        <div class="card">
-          <h3>Allwise Navigator</h3>
-          <p>Operational playbooks and KPIs that guide managers to predictable outcomes.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="container section pricing" id="pricing">
-      <h2>Pricing</h2>
-      <div class="grid">
-        <div class="plan">
-          <h3>Basic</h3>
-          <ul>
-            <li>Monthly P&amp;L generation</li>
-            <li>Excel + Google Sheets outputs</li>
-            <li>Locked formulas, editable inputs</li>
-          </ul>
-          <a class="btn" href="#contact">Request Access</a>
-        </div>
-        <div class="plan">
-          <h3>Pro</h3>
-          <ul>
-            <li>Multi-entity + scenarios</li>
-            <li>Account mapping editor</li>
-            <li>Audit checks &amp; variance tools</li>
-          </ul>
-          <a class="btn" href="#contact">Request Access</a>
-        </div>
-      </div>
-      <p class="fine">Stripe checkout links can be added here once configured.</p>
-    </div>
-
-    <div class="container section" id="about">
-      <h2>About</h2>
-      <p>Viking Restaurant Consultants LLC helps operators turn financial and operational chaos into clarity. We build practical tools that fit your workflow.</p>
-    </div>
-
-    <div class="container section" id="contact">
-      <h2>Contact</h2>
-      <p>Email: <a href="mailto:William@vikingrestaurantconsultants.onmicrosoft.com">William@vikingrestaurantconsultants.onmicrosoft.com</a></p>
-      <p>Principals: William Huffstetler, Nicole Antonini</p>
-    </div>
-
-  <footer>
-    <div class="container">
-      <div>© <span id="y"></span> Viking Restaurant Consultants LLC • Odin’s Almanac</div>
-      <div class="fine">Privacy Policy • Terms of Service</div>
-    </div>
-  </footer>
-  <script>document.getElementById('y').textContent=new Date().getFullYear();</script>
-</body>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Odin’s Eye</title>
+  </head>
+  <body>
+    <h1>Odin’s Eye</h1>
+    <button id="subscribe">Start Subscription</button>
+    <script>
+      document.getElementById('subscribe').onclick = async () => {
+        try {
+          const resp = await fetch('/api/stripe/create-checkout-session', { method: 'POST' });
+        const data = await resp.json();
+        if (data?.url) window.location = data.url;
+        else alert('Checkout failed (no URL). Check server logs.');
+        } catch (e) {
+          alert('Network error. Server may not be running.');
+        }
+      };
+    </script>
+  </body>
 </html>
