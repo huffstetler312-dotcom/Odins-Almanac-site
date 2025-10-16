@@ -1,0 +1,73 @@
+# Node modules and build artifacts
+node_modules/
+dist/
+build/
+.next/
+out/
+
+# Tailwind and PostCSS configs (optional to ignore if generated)
+tailwind.config.js
+postcss.config.js
+
+# Environment and secrets
+.env
+.env.*
+
+# Lockfiles — keep npm, ignore others
+yarn.lock
+pnpm-lock.yaml
+
+# Logs and coverage
+logs/
+*.log
+npm-debug.log*
+coverage/
+
+# OS and editor junk
+.DS_Store
+Thumbs.db
+*.swp
+
+# Vite and bundler cache
+.vite/
+*.tsbuildinfo
+*.bundle
+
+# Expo and React Native
+.expo/
+.expo-shared/
+*.apk
+*.ipa
+
+# IDE/editor configs
+.vscode/
+.idea/
+
+# Replit and local dev
+.replit
+*.zip
+*.tar.gz
+
+# Assets and screenshots
+assets/images/
+imageGenerationsLog
+screenshots/
+
+# Azure artifacts
+.azure/
+*.azure-pipelines.yml
+
+# Vercel artifacts
+.vercel/
+output/
+
+# GitHub Actions — keep workflows, ignore generated logs/artifacts
+.github/*.log
+.github/*.cache
+!.github/workflows/
+!.github/*.yml
+
+# Misc
+*.bak
+*.tmp
+*.orig
