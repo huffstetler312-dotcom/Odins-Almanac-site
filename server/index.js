@@ -5,8 +5,8 @@ const app = express();
 
 app.use(express.json());
 
-// Serve static files from client/public
-const clientPath = path.join(__dirname, '..', 'client', 'public');
+// Serve static files from public
+const clientPath = path.join(__dirname, 'public');
 app.use(express.static(clientPath));
 
 // Health check
