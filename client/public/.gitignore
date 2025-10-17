@@ -71,3 +71,48 @@ output/
 *.bak
 *.tmp
 *.orig
+# Node modules and build artifacts
+node_modules/
+dist/
+build/
+
+# Logs and debug files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Environment and config
+.env
+.env.local
+.env.*.local
+
+# IDE/editor folders
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# OS-specific
+*.swp
+*.bak
+
+# Git metadata
+.git/
+
+# Replit and Codespaces
+.replit
+*.tar.gz
+*.zip
+
+# Odin’s Eye specific
+server/routes/node_modules/
+client/node_modules/
+public/node_modules/
+
+# Optional: lock files if you want to regenerate them cleanly
+package-lock.json
+yarn.lock
