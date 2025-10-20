@@ -1,4 +1,35 @@
-
+# Node modules
 server/node_modules/
 client/node_modules/
-release.zip
+node_modules/
+
+# Build artifacts
+dist/
+build/
+*.zip
+*.tar.gz
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment files
+.env
+.env.*
+.env.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.bak
+
+# Azure artifacts
+.azure/
+
+# Replit
+.replit
