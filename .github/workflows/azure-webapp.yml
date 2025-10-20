@@ -8,6 +8,9 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
       - name: Checkout
@@ -27,9 +30,15 @@ jobs:
           cd server
           zip -r ../release.zip .
 
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_8877547382D3441199425E8535F73C2C }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_006B6A88688E4509A0557C8D2EE08A51 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_9C9543B6F195411CA49F8D1E7139BF22 }}
+
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: Odinsalmanac
           package: release.zip
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
