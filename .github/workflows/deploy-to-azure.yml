@@ -12,6 +12,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Fail if publish profile secret missing
+        if: secrets.AZURE_WEBAPP_PUBLISH_PROFILE == ''
+        run: |
+          echo "AZURE_WEBAPP_PUBLISH_PROFILE secret is not set. Add it in repository settings -> Secrets and variables -> Actions." >&2
+          exit 1
+
+      - name: Create release.zip
+        run: |
+          if [ -d server ]; then
+            zip -r release.zip server
+          else
+            echo "server directory not found" >&2
+            exit 1
+          fi
+
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
