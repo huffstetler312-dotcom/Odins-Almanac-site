@@ -1,4 +1,4 @@
-name: Deploy Odin's Eye server to Azure Web App
+name: Deploy Odinalmanc server to Azure Web App
 
 on:
   push:
