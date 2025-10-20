@@ -4,19 +4,18 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      # Set the app name here or via secret
+      AZURE_APP_NAME: Odinsalmanac
+      AZURE_RESOURCE_GROUP: ${{ secrets.AZURE_RESOURCE_GROUP }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Fail if publish profile secret missing
-        if: secrets.AZURE_WEBAPP_PUBLISH_PROFILE == ''
-        run: |
-          echo "AZURE_WEBAPP_PUBLISH_PROFILE secret is not set. Add it in repository settings -> Secrets and variables -> Actions." >&2
-          exit 1
 
       - name: Create release.zip
         run: |
@@ -26,6 +25,28 @@ jobs:
             echo "server directory not found" >&2
             exit 1
           fi
+
+      - name: Fail if service principal secret missing
+        if: secrets.AZURE_CREDENTIALS == ''
+        run: |
+          echo "AZURE_CREDENTIALS secret is not set. Create an Azure service principal and add the JSON as the AZURE_CREDENTIALS secret." >&2
+          exit 1
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy (config-zip)
+        run: |
+          if [ -z "${AZURE_RESOURCE_GROUP}" ]; then
+            echo "AZURE_RESOURCE_GROUP secret is not set. Set it in repository secrets or set the env variable." >&2
+            exit 1
+          fi
+          az webapp deployment source config-zip \
+            --resource-group "${AZURE_RESOURCE_GROUP}" \
+            --name "${AZURE_APP_NAME}" \
+            --src release.zip
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
