@@ -1,9 +1,12 @@
+# DISABLED - Using azure-webapp.yml instead
+# Remove the lines below to re-enable
+
 name: Build and deploy Node.js app to Azure Web App - Odinsalmanac
 
-on:
-  push:
-    branches: [ "main" ]
-  workflow_dispatch:
+# on:
+#  push:
+#    branches: [ "main" ]
+#       workflow_dispatch:
 
 jobs:
   build:
@@ -67,4 +70,5 @@ jobs:
         with:
           app-name: 'Odinsalmanac'
           slot-name: 'Production'
+
           package: server-release.zip
