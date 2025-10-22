@@ -1,0 +1,31 @@
+# Quick Commands for Odins-Almanac-site Setup
+
+## Check Status
+git status
+
+## Add and Commit Workflow Changes
+git add .github/workflows/azure-webapp.yml
+git commit -m "Fix release.zip creation and Node 22 upgrade"
+
+## Push to GitHub
+git push
+
+## Alternative Push with Token (if needed)
+git push https://YOUR_TOKEN@github.com/Viking-Restaurant-Consultants/Odins-Almanac-site.git
+
+## GitHub CLI Login (Recommended)
+gh auth login
+
+## Check Remote URL
+git remote -v
+
+## Set Remote with Token (if needed)
+git remote set-url origin https://YOUR_TOKEN@github.com/Viking-Restaurant-Consultants/Odins-Almanac-site.git
+
+## Build and Test Locally
+cd server
+npm install
+npm start
+
+## Check Workflow Run Status
+# Go to: https://github.com/Viking-Restaurant-Consultants/Odins-Almanac-site/actions

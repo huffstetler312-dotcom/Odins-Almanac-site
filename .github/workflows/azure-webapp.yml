@@ -29,6 +29,8 @@ jobs:
         run: |
           cd server
           zip -r ../release.zip .
+          cd ..
+          ls -la release.zip
 
       - name: Login to Azure
         uses: azure/login@v2
