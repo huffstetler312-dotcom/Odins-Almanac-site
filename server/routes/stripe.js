@@ -4,18 +4,41 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 router.post('/create-checkout-session', async (_req, res) => {
   try {
+    // Check if Stripe is properly configured
+    if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY.includes('REPLACE')) {
+      return res.status(500).json({ 
+        error: 'Stripe not configured', 
+        message: 'Please contact support to complete your subscription setup.' 
+      });
+    }
+
+    // Check if price ID is configured
+    const priceId = process.env.STRIPE_PRICE_ID || 'price_REPLACE_WITH_YOUR_ACTUAL_PRICE_ID';
+    if (priceId.includes('REPLACE')) {
+      return res.status(500).json({ 
+        error: 'Pricing not configured', 
+        message: 'Subscription pricing is being configured. Please contact support.' 
+      });
+    }
+
+    const baseUrl = process.env.APP_BASE_URL || 'https://odinsalmanac-drbxbhewetbghqdu.westcentralus-01.azurewebsites.net';
+    
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
       line_items: [
-        { price: 'price_REPLACE_WITH_YOUR_ACTUAL_PRICE_ID', quantity: 1 }
+        { price: priceId, quantity: 1 }
       ],
-      success_url: `${process.env.APP_BASE_URL}/?success=true`,
-      cancel_url: `${process.env.APP_BASE_URL}/?canceled=true`,
+      success_url: `${baseUrl}/?success=true`,
+      cancel_url: `${baseUrl}/?canceled=true`,
     });
+    
     res.json({ url: session.url });
   } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: 'Stripe error' });
+    console.error('Stripe checkout error:', e);
+    res.status(500).json({ 
+      error: 'Checkout error', 
+      message: 'Unable to create checkout session. Please contact support.' 
+    });
   }
 });
 

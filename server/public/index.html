@@ -1,21 +1,214 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Odin's Eye</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Odin's Almanac - Viking Restaurant Consulting</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      body {
+        font-family: 'Georgia', 'Times New Roman', serif;
+        line-height: 1.6;
+        color: #2c3e50;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+      
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      
+      .hero {
+        text-align: center;
+        padding: 60px 20px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        margin: 40px 0;
+        backdrop-filter: blur(10px);
+      }
+      
+      .logo {
+        font-size: 3.5rem;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      
+      .subtitle {
+        font-size: 1.3rem;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        font-style: italic;
+      }
+      
+      .description {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        margin-bottom: 40px;
+        color: #34495e;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      
+      .cta-button {
+        background: linear-gradient(45deg, #e74c3c, #c0392b);
+        color: white;
+        padding: 18px 40px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(231, 76, 60, 0.3);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      
+      .cta-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(231, 76, 60, 0.4);
+        background: linear-gradient(45deg, #c0392b, #a93226);
+      }
+      
+      .cta-button:active {
+        transform: translateY(-1px);
+      }
+      
+      .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin: 50px 0;
+      }
+      
+      .feature {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 30px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+      
+      .feature:hover {
+        transform: translateY(-5px);
+      }
+      
+      .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 20px;
+      }
+      
+      .feature h3 {
+        color: #2c3e50;
+        margin-bottom: 15px;
+        font-size: 1.4rem;
+      }
+      
+      .feature p {
+        color: #7f8c8d;
+        line-height: 1.6;
+      }
+      
+      .footer {
+        text-align: center;
+        padding: 30px;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.9rem;
+      }
+      
+      @media (max-width: 768px) {
+        .logo {
+          font-size: 2.5rem;
+        }
+        
+        .hero {
+          padding: 40px 15px;
+          margin: 20px 0;
+        }
+        
+        .cta-button {
+          padding: 15px 30px;
+          font-size: 1.1rem;
+        }
+      }
+    </style>
   </head>
   <body>
-    <h1>Odin's Eye</h1>
-    <button id="subscribe">Start Subscription</button>
+    <div class="container">
+      <div class="hero">
+        <h1 class="logo">🛡️ Odin's Almanac</h1>
+        <p class="subtitle">Viking Restaurant Consulting</p>
+        <p class="description">
+          Unleash the power of ancient wisdom in modern dining. Our expert consultants help restaurants 
+          create legendary experiences that customers will remember for ages. From menu optimization to 
+          staff training, we bring the strategic mind of Odin to your establishment.
+        </p>
+        <button id="subscribe" class="cta-button">Start Your Legend</button>
+      </div>
+      
+      <div class="features">
+        <div class="feature">
+          <div class="feature-icon">⚔️</div>
+          <h3>Strategic Planning</h3>
+          <p>Battle-tested strategies to conquer your market and dominate the competition with proven tactics.</p>
+        </div>
+        
+        <div class="feature">
+          <div class="feature-icon">🍖</div>
+          <h3>Menu Mastery</h3>
+          <p>Craft legendary dishes that tell stories and create unforgettable dining experiences for every guest.</p>
+        </div>
+        
+        <div class="feature">
+          <div class="feature-icon">👥</div>
+          <h3>Warrior Training</h3>
+          <p>Transform your staff into a legendary crew that delivers service worthy of Valhalla's great halls.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <p>&copy; 2025 Viking Restaurant Consultants. All rights reserved.</p>
+    </div>
+
     <script>
       document.getElementById('subscribe').onclick = async () => {
         try {
+          // Show loading state
+          const button = document.getElementById('subscribe');
+          const originalText = button.textContent;
+          button.textContent = 'Preparing Your Journey...';
+          button.disabled = true;
+          
           const resp = await fetch('/api/stripe/create-checkout-session', { method: 'POST' });
           const data = await resp.json();
-          if (data?.url) window.location = data.url;
-          else alert('Checkout failed (no URL). Check server logs.');
+          
+          if (data?.url) {
+            window.location = data.url;
+          } else {
+            alert('Checkout session could not be created. Please contact support.');
+            console.error('Checkout response:', data);
+          }
         } catch (e) {
-          alert('Network error. Server may not be running.');
+          alert('Network error. Please try again or contact support.');
+          console.error('Network error:', e);
+        } finally {
+          // Reset button state
+          const button = document.getElementById('subscribe');
+          button.textContent = originalText;
+          button.disabled = false;
         }
       };
     </script>
