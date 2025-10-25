@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spreadsheet Creator Demo - Odin's Eye</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-dark: #0a0e13;
+            --secondary-dark: #1a2332;
+            --tertiary-dark: #2c3545;
+            --gold-accent: #ffd700;
+            --gold-dark: #b8860b;
+            --text-primary: #ffffff;
+            --text-secondary: #cbd5e1;
+            --border-subtle: rgba(241, 245, 249, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0e13 0%, #1a2332 50%, #2c3545 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            color: var(--gold-accent);
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid var(--gold-accent);
+            color: var(--gold-accent);
+            text-decoration: none;
+            border-radius: 6px;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: var(--gold-accent);
+            color: var(--primary-dark);
+        }
+
+        .demo-section {
+            background: linear-gradient(145deg, rgba(26, 35, 50, 0.8), rgba(44, 53, 69, 0.4));
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .demo-section h2 {
+            color: var(--gold-accent);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .demo-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-box {
+            background: rgba(241, 245, 249, 0.05);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--gold-accent);
+        }
+
+        .feature-box h3 {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-box p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .action-button {
+            background: linear-gradient(135deg, var(--gold-accent), var(--gold-dark));
+            color: var(--primary-dark);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
+        }
+
+        .demo-output {
+            background: rgba(10, 14, 19, 0.6);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            font-family: 'Courier New', monospace;
+            color: #00ff00;
+            min-height: 200px;
+        }
+
+        .demo-output p {
+            margin-bottom: 0.5rem;
+        }
+
+        .info-box {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid var(--gold-accent);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .info-box h3 {
+            color: var(--gold-accent);
+            margin-bottom: 1rem;
+        }
+
+        .info-box p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-button">← Back to Home</a>
+
+        <div class="header">
+            <h1>📊 AI-Powered Spreadsheet Creator</h1>
+            <p>Generate professional Excel reports with P&L statements, inventory analysis, and more</p>
+        </div>
+
+        <div class="demo-section">
+            <h2>Demo Features</h2>
+            <div class="demo-features">
+                <div class="feature-box">
+                    <h3>P&L Statements</h3>
+                    <p>Automated profit & loss analysis with real-time cost tracking and margin calculations</p>
+                </div>
+                <div class="feature-box">
+                    <h3>Inventory Analysis</h3>
+                    <p>Comprehensive inventory cost breakdown and variance tracking</p>
+                </div>
+                <div class="feature-box">
+                    <h3>Recipe Profitability</h3>
+                    <p>Ingredient-level costing with profitability analysis per menu item</p>
+                </div>
+                <div class="feature-box">
+                    <h3>Variance Tracking</h3>
+                    <p>Compare theoretical vs. actual costs to identify optimization opportunities</p>
+                </div>
+            </div>
+
+            <button class="action-button" onclick="generateSpreadsheet()">Generate Demo Spreadsheet</button>
+
+            <div class="demo-output" id="output" style="display: none;">
+                <p><strong>🚀 Spreadsheet Generation Started...</strong></p>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h3>About This Feature</h3>
+            <p>
+                The AI-Powered Spreadsheet Creator uses GPT-4.1 algorithms to analyze your restaurant data 
+                and automatically generate comprehensive financial documents. In production, this feature 
+                connects to your POS system and accounting software to pull real-time data and create 
+                Excel files with formulas, charts, and professional formatting.
+            </p>
+            <p style="margin-top: 1rem;">
+                <strong>Ready to see the real system?</strong> Contact Viking Restaurant Consultants to 
+                schedule a personalized demo with your actual restaurant data!
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function generateSpreadsheet() {
+            const output = document.getElementById('output');
+            output.style.display = 'block';
+            output.innerHTML = '<p><strong>🚀 Spreadsheet Generation Started...</strong></p>';
+
+            const steps = [
+                { delay: 500, text: '✅ Analyzing P&L data...' },
+                { delay: 1000, text: '✅ Processing inventory reports...' },
+                { delay: 1500, text: '✅ Calculating variance analysis...' },
+                { delay: 2000, text: '✅ Optimizing recipe profitability...' },
+                { delay: 2500, text: '✅ Generating Excel formulas...' },
+                { delay: 3000, text: '✅ Applying professional formatting...' },
+                { delay: 3500, text: '<br><strong>📊 Demo Spreadsheet Generated!</strong><br><br>' },
+                { delay: 3600, text: '<strong>Contents would include:</strong><br>' },
+                { delay: 3700, text: '• Monthly P&L statement with trend analysis<br>' },
+                { delay: 3800, text: '• Inventory cost breakdown by category<br>' },
+                { delay: 3900, text: '• Recipe profitability analysis (top 20 items)<br>' },
+                { delay: 4000, text: '• Variance tracking report (theoretical vs. actual)<br>' },
+                { delay: 4100, text: '• Cash flow projections (next 3 months)<br>' },
+                { delay: 4500, text: '<br><strong>💼 Revenue:</strong> $125,000<br>' },
+                { delay: 4600, text: '<strong>💰 Food Cost:</strong> 28.5% ($35,625)<br>' },
+                { delay: 4700, text: '<strong>👥 Labor Cost:</strong> 32% ($40,000)<br>' },
+                { delay: 4800, text: '<strong>📈 Net Profit:</strong> 12.8% ($16,000)<br>' },
+                { delay: 5300, text: '<br><em>In production, this would download an actual Excel file to your computer.</em>' }
+            ];
+
+            steps.forEach(step => {
+                setTimeout(() => {
+                    output.innerHTML += step.text;
+                }, step.delay);
+            });
+        }
+    </script>
+</body>
+</html>
