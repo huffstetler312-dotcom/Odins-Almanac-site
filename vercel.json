@@ -1,0 +1,38 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
+  "name": "odins-almanac",
+  "builds": [
+    {
+      "src": "server/index.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/health",
+      "dest": "server/index.js"
+    },
+    {
+      "src": "/healthz",
+      "dest": "server/index.js"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "server/index.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "server/index.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production",
+    "STRIPE_SECRET_KEY": "@stripe-secret-key",
+    "STRIPE_PUBLISHABLE_KEY": "@stripe-publishable-key",
+    "STRIPE_STARTER_PRICE_ID": "@stripe-starter-price-id",
+    "STRIPE_PRO_PRICE_ID": "@stripe-pro-price-id",
+    "STRIPE_PLATINUM_PRICE_ID": "@stripe-platinum-price-id",
+    "STRIPE_ENTERPRISE_PRICE_ID": "@stripe-enterprise-price-id"
+  }
+}

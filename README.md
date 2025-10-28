@@ -2,8 +2,13 @@
 
 [![CI Pipeline](https://github.com/Viking-Restaurant-Consultants/Odins-Almanac-site/actions/workflows/ci.yml/badge.svg)](https://github.com/Viking-Restaurant-Consultants/Odins-Almanac-site/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Deploy to Heroku](https://img.shields.io/badge/deploy%20to-heroku-430098.svg)](https://heroku.com/deploy?template=https://github.com/Viking-Restaurant-Consultants/Odins-Almanac-site)
+[![Deploy to Render](https://img.shields.io/badge/deploy%20to-render-46E3B7.svg)](https://render.com/deploy?repo=https://github.com/Viking-Restaurant-Consultants/Odins-Almanac-site)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Viking-Restaurant-Consultants/Odins-Almanac-site)
 
 Transform your restaurant's food safety from reactive compliance to proactive advantage with our revolutionary AI platform.
+
+> **🎥 30-Second Demo:** [Watch the platform in action](https://your-demo-url.com) | **🌐 Live Demo:** [Try it now](https://your-demo-url.com)
 
 ## 🚀 Overview
 
@@ -13,12 +18,50 @@ Odin's Almanac is a comprehensive food safety and restaurant management platform
 - **🏷️ Prep & Plate**: Patent-pending automated labeling and monitoring system  
 - **👁️ Odin's Eye**: Financial intelligence and inventory optimization platform
 
+### Why Odin's Almanac?
+
+- ⚡ **Instant Compliance**: 24/7 AI-powered food safety expert at your fingertips
+- 📊 **Smart Analytics**: Real-time financial intelligence and inventory optimization
+- 🏷️ **Automated Labeling**: Patent-pending system eliminates manual tracking errors
+- 🛡️ **Risk Reduction**: Reduce compliance violations by 90%, improve audit scores by 95%
+- 💰 **Cost Savings**: Optimize inventory, reduce waste, and maximize profitability
+
 ## ⚡ Quick Start
+
+Choose your preferred deployment method:
+
+### Option 1: One-Click Deploy (Fastest) 🚀
+
+Deploy to your favorite platform in under 2 minutes:
+
+- **Heroku**: [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/Viking-Restaurant-Consultants/Odins-Almanac-site)
+- **Render**: [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Viking-Restaurant-Consultants/Odins-Almanac-site)
+- **Vercel**: [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Viking-Restaurant-Consultants/Odins-Almanac-site)
+
+### Option 2: Docker (Recommended for Production) 🐳
+
+```bash
+# Clone the repository
+git clone https://github.com/Viking-Restaurant-Consultants/Odins-Almanac-site.git
+cd Odins-Almanac-site
+
+# Copy and configure environment
+cp .env.example .env
+cp server/.env.example server/.env
+# Edit .env and server/.env with your Stripe credentials
+
+# Start with Docker Compose
+docker-compose up -d
+
+# Visit http://localhost:8080
+```
+
+### Option 3: Local Development 💻
 
 ### Prerequisites
 
 - **Node.js** 18+ (for server)
-- **Java 11+** (for Maven build)
+- **Java 11+** (for Maven build, optional)
 - **npm** or **yarn**
 
 ### 1. Clone & Install
@@ -104,17 +147,119 @@ Our GitHub Actions workflow automatically:
 
 ## 📊 API Endpoints
 
-### Health & Status
-- `GET /health` - Detailed health check with system metrics
-- `GET /healthz` - Simple health check for load balancers
+### Health & Status Checks
+
+Health check endpoints are essential for load balancers, orchestration platforms, and monitoring systems.
+
+#### `GET /health`
+Detailed health check with comprehensive system metrics.
+
+**Response:**
+```json
+{
+  "status": "healthy",
+  "timestamp": "2024-10-28T03:00:00.000Z",
+  "uptime": 3600.45,
+  "memory": {
+    "rss": 52428800,
+    "heapTotal": 18874368,
+    "heapUsed": 10485760,
+    "external": 1234567
+  },
+  "env": "production"
+}
+```
+
+**Use Cases:**
+- Monitoring dashboards
+- Detailed system diagnostics
+- Performance tracking
+- Health status reporting
+
+#### `GET /healthz`
+Simple lightweight health check for load balancers and Kubernetes probes.
+
+**Response:**
+```
+ok
+```
+
+**Use Cases:**
+- Kubernetes liveness/readiness probes
+- Load balancer health checks
+- Uptime monitoring
+- High-frequency health polling
+
+**Configuration Examples:**
+
+Docker healthcheck:
+```dockerfile
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD node -e "require('http').get('http://localhost:8080/healthz', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
+```
+
+Kubernetes probes:
+```yaml
+livenessProbe:
+  httpGet:
+    path: /healthz
+    port: 8080
+  initialDelaySeconds: 10
+  periodSeconds: 30
+readinessProbe:
+  httpGet:
+    path: /healthz
+    port: 8080
+  initialDelaySeconds: 5
+  periodSeconds: 10
+```
 
 ### Stripe Integration
-- `POST /api/stripe/create-checkout-session` - Create payment session
-- `GET /api/stripe/pricing-plans` - Get available subscription plans
+
+#### `POST /api/stripe/create-checkout-session`
+Create a Stripe Checkout session for subscription purchase.
+
+**Request:**
+```json
+{
+  "plan": "pro"
+}
+```
+
+**Response:**
+```json
+{
+  "url": "https://checkout.stripe.com/..."
+}
+```
+
+**Available Plans:** `starter`, `pro`, `platinum`, `enterprise`
+
+#### `GET /api/stripe/pricing-plans`
+Get all available subscription plans with pricing details.
+
+**Response:**
+```json
+[
+  {
+    "id": "starter",
+    "name": "Starter Plan",
+    "price": 45,
+    "currency": "USD",
+    "interval": "month",
+    "features": ["1 Location", "Basic P&L", "Recipe Calculator", "Email Support"]
+  },
+  // ... more plans
+]
+```
 
 ### Example API Usage
 
 ```javascript
+// Health Check
+const health = await fetch('/health').then(r => r.json());
+console.log(`Server uptime: ${health.uptime}s`);
+
 // Create checkout session
 const response = await fetch('/api/stripe/create-checkout-session', {
   method: 'POST',
@@ -124,6 +269,10 @@ const response = await fetch('/api/stripe/create-checkout-session', {
 
 const { url } = await response.json();
 window.location = url; // Redirect to Stripe Checkout
+
+// Get pricing plans
+const plans = await fetch('/api/stripe/pricing-plans').then(r => r.json());
+console.log(`Available plans: ${plans.length}`);
 ```
 
 ## 🏗️ Architecture
@@ -141,6 +290,13 @@ window.location = url; // Redirect to Stripe Checkout
 │   ├── COPILOT_CODING_AGENT.md
 │   └── pull_request_template.md
 ├── scripts/             # Utility scripts
+├── Dockerfile           # Docker image definition
+├── docker-compose.yml   # Local Docker orchestration
+├── k8s-deployment.yml   # Kubernetes manifests
+├── render.yaml          # Render.com deployment config
+├── vercel.json          # Vercel deployment config
+├── app.json             # Heroku deployment config
+├── Procfile             # Heroku process definition
 └── pom.xml              # Maven configuration
 ```
 
@@ -177,14 +333,104 @@ All plans include:
 
 ## 🚀 Deployment
 
+### Quick Deploy Options
+
+Deploy Odin's Almanac to your favorite platform in minutes:
+
+#### 🔷 Heroku (Fastest for beginners)
+```bash
+# One-click deploy
+```
+[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/Viking-Restaurant-Consultants/Odins-Almanac-site)
+
+Or via CLI:
+```bash
+heroku create your-app-name
+heroku config:set NODE_ENV=production
+heroku config:set STRIPE_SECRET_KEY=sk_live_...
+# ... set other env vars
+git push heroku main
+```
+
+#### 🟢 Render (Best for production)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Viking-Restaurant-Consultants/Odins-Almanac-site)
+
+Uses `render.yaml` for automatic configuration. Just connect your GitHub repo and set environment variables.
+
+#### ▲ Vercel (Best for serverless)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Viking-Restaurant-Consultants/Odins-Almanac-site)
+
+```bash
+# Or via CLI
+npm i -g vercel
+vercel --prod
+```
+
+#### 🐳 Docker Deployment
+
+**Local Development:**
+```bash
+docker-compose up -d
+```
+
+**Production:**
+```bash
+# Build image
+docker build -t odins-almanac:latest .
+
+# Run container
+docker run -d \
+  -p 8080:8080 \
+  -e NODE_ENV=production \
+  -e STRIPE_SECRET_KEY=sk_live_... \
+  --name odins-almanac \
+  odins-almanac:latest
+```
+
+**Docker Registry:**
+```bash
+# Tag and push to your registry
+docker tag odins-almanac:latest your-registry/odins-almanac:latest
+docker push your-registry/odins-almanac:latest
+```
+
+#### ☸️ Kubernetes Deployment
+
+```bash
+# Update k8s-deployment.yml with your configuration
+kubectl apply -f k8s-deployment.yml
+
+# Check deployment status
+kubectl get pods -n odins-almanac
+kubectl get services -n odins-almanac
+
+# View logs
+kubectl logs -f deployment/odins-almanac-server -n odins-almanac
+```
+
+The Kubernetes manifests include:
+- Horizontal Pod Autoscaling (2-10 replicas)
+- Health checks (liveness & readiness probes)
+- Resource limits and requests
+- TLS/SSL via cert-manager
+- Ingress configuration
+
 ### Production Checklist
 
+Before deploying to production:
+
 - [ ] Set `NODE_ENV=production`
-- [ ] Configure production database
-- [ ] Set up SSL certificates
+- [ ] Use live Stripe keys (`sk_live_...`, `pk_live_...`)
+- [ ] Configure production domain in `APP_BASE_URL`
+- [ ] Set up SSL/TLS certificates
 - [ ] Configure load balancer health checks (`/healthz`)
 - [ ] Set up monitoring and logging
 - [ ] Configure backup procedures
+- [ ] Test payment flows end-to-end
+- [ ] Set up error tracking (e.g., Sentry)
+- [ ] Configure rate limiting if needed
+- [ ] Review CORS settings
+- [ ] Enable security headers (Helmet.js)
 
 ### Environment Variables (Production)
 
@@ -194,14 +440,19 @@ PORT=8080
 APP_BASE_URL=https://your-domain.com
 STRIPE_SECRET_KEY=sk_live_...
 STRIPE_PUBLISHABLE_KEY=pk_live_...
-# ... other production keys
+STRIPE_STARTER_PRICE_ID=price_...
+STRIPE_PRO_PRICE_ID=price_...
+STRIPE_PLATINUM_PRICE_ID=price_...
+STRIPE_ENTERPRISE_PRICE_ID=price_...
 ```
 
-### Azure App Service (Current Deployment)
+### Platform-Specific Notes
+
+#### Azure App Service (Current Deployment)
 
 The app is configured for Azure App Service deployment:
 - Health check endpoint: `/healthz`
-- Startup command: `npm start`
+- Startup command: `cd server && npm start`
 - Runtime: Node.js 18 LTS
 
 ## 🤝 Contributing
@@ -250,6 +501,28 @@ See [`.github/COPILOT_CODING_AGENT.md`](.github/COPILOT_CODING_AGENT.md) for spe
 - **💬 Questions**: Contact Viking Restaurant Consultants
 - **🔐 Security Issues**: Email security@vikingrestaurantconsultants.com
 
+## 🌐 Live Demos & Resources
+
+### Public Demo
+🎯 **Try the live demo:** [https://vrc-odins-almanac-dmh3dybbgsgqgteu.eastus-01.azurewebsites.net](https://vrc-odins-almanac-dmh3dybbgsgqgteu.eastus-01.azurewebsites.net)
+
+Experience the full platform with:
+- Interactive pricing page with Stripe integration (test mode)
+- Real-time health monitoring at `/health`
+- Complete product showcase
+- Mobile-responsive design
+
+### Video Demos
+- 🎥 **30-Second Overview**: [Watch on YouTube](https://your-demo-url.com) *(Coming soon)*
+- 📺 **Full Platform Walkthrough**: [Watch on YouTube](https://your-demo-url.com) *(Coming soon)*
+- 🎬 **API Integration Guide**: [Watch on YouTube](https://your-demo-url.com) *(Coming soon)*
+
+### Additional Resources
+- 📚 **API Documentation**: Check the API Endpoints section above
+- 💡 **Integration Examples**: See `server/public/index.html` for Stripe integration
+- 🔧 **Setup Guide**: Follow the Quick Start section
+- 🏗️ **Architecture Diagrams**: See Architecture section
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -265,7 +538,7 @@ Viking Restaurant Consultants
 
 **Ready to transform your restaurant's food safety operations?**
 
-[🚀 Start Your Free Trial](https://your-domain.com) • [📞 Contact Sales](mailto:sales@vikingrestaurantconsultants.com) • [📚 Documentation](https://docs.your-domain.com)
+[🚀 Start Your Free Trial](https://vrc-odins-almanac-dmh3dybbgsgqgteu.eastus-01.azurewebsites.net) • [📞 Contact Sales](mailto:sales@vikingrestaurantconsultants.com) • [📚 Documentation](https://docs.your-domain.com)
 
 ---
 
