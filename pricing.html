@@ -610,7 +610,7 @@
         async function upgradeToStarter() {
             try {
                 // Create Stripe checkout session for Starter tier
-                const response = await fetch('http://localhost:3000/api/create-checkout-session', {
+                const response = await fetch('/api/create-checkout-session', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -641,7 +641,7 @@
         async function upgradeToPro() {
             try {
                 // Create Stripe checkout session for Pro tier
-                const response = await fetch('http://localhost:3000/api/create-checkout-session', {
+                const response = await fetch('/api/create-checkout-session', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -672,7 +672,7 @@
         async function upgradeToPlatinum() {
             try {
                 // Create Stripe checkout session for Platinum tier
-                const response = await fetch('http://localhost:3000/api/create-checkout-session', {
+                const response = await fetch('/api/create-checkout-session', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
