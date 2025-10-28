@@ -16,7 +16,6 @@ yarn-error.log*
 
 # Documentation
 *.md
-!README.md
 *.pdf
 NAMING_FIXES_REPORT.pdf
 GITHUB_TOKEN_AND_PUSH_GUIDE.md
@@ -38,13 +37,8 @@ coverage
 *.lcov
 
 # Build artifacts
-target
 dist
-build
 .next
-
-# Maven
-pom.xml
 
 # Scripts
 scripts
@@ -54,9 +48,11 @@ tmp
 temp
 *.tmp
 
-# Client source (if separate build process)
-client
-
 # Other
 odins-eye
 QUICK_COMMANDS.txt
+
+# Docker files (to avoid recursive copies)
+Dockerfile
+docker-compose.yml
+.dockerignore

@@ -40,20 +40,29 @@ Deploy to your favorite platform in under 2 minutes:
 
 ### Option 2: Docker (Recommended for Production) 🐳
 
+The application uses Docker Compose to orchestrate three services:
+- PostgreSQL 15 database
+- Java Spring Boot backend (port 8080)
+- React frontend with Nginx (port 3000)
+
 ```bash
 # Clone the repository
 git clone https://github.com/Viking-Restaurant-Consultants/Odins-Almanac-site.git
 cd Odins-Almanac-site
 
-# Copy and configure environment
-cp .env.example .env
-cp server/.env.example server/.env
-# Edit .env and server/.env with your Stripe credentials
+# Start all services
+docker compose up -d
 
-# Start with Docker Compose
-docker-compose up -d
+# Access the application
+# Frontend: http://localhost:3000
+# Backend API: http://localhost:8080
+# Database: localhost:5432
 
-# Visit http://localhost:8080
+# View logs
+docker compose logs -f
+
+# Stop services
+docker compose down
 ```
 
 ### Option 3: Local Development 💻
