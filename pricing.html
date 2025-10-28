@@ -109,6 +109,38 @@
             font-weight: 600;
             letter-spacing: 1px;
         }
+
+        .pricing-card.premium {
+            border: 3px solid #ffd700;
+            background: linear-gradient(135deg, #fafafa 0%, #f0f0f0 100%);
+        }
+
+        .pricing-card.premium::before {
+            content: "ENTERPRISE";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #333;
+            text-align: center;
+            padding: 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .cta-button.cta-premium {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #333;
+            font-weight: 600;
+        }
+
+        .cta-button.cta-premium:hover {
+            background: linear-gradient(135deg, #ffed4e 0%, #ffd700 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
+        }
         
         .tier-header {
             text-align: center;
@@ -310,18 +342,65 @@
         <div class="header">
             <div class="badge">PRICING</div>
             <h1 class="platform-title">Restaurant Intelligence Platform</h1>
-            <p class="subtitle">All-seeing AI intelligence for your restaurant operations</p>
-            <p style="opacity: 0.8;">Start free, upgrade when ready for advanced features</p>
+            <p class="subtitle">Enterprise-grade AI intelligence for professional restaurant operations</p>
+            <p style="opacity: 0.8;">Start with a free trial, scale with your business growth</p>
         </div>
 
         <div class="pricing-grid">
-            <!-- Free Tier -->
+            <!-- Free Trial -->
             <div class="pricing-card">
                 <div class="tier-header">
-                    <h2 class="tier-name">Free</h2>
-                    <p class="tier-description">Perfect for getting started with restaurant analytics</p>
+                    <h2 class="tier-name">Free Trial</h2>
+                    <p class="tier-description">Full platform access - 14 days completely free</p>
                     <div class="price-display">
                         <span class="price">$0</span>
+                        <span class="price-unit">/14 days</span>
+                    </div>
+                </div>
+
+                <ul class="features-list">
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">Full Platform Access</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">All AI Analytics Features</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">Unlimited P&L Reports</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">Advanced Inventory Management</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">Predictive Analytics</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">Multi-Location Support</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">No Credit Card Required</span>
+                    </li>
+                </ul>
+
+                <button class="cta-button cta-secondary" onclick="startFreeTrial()">
+                    Start Free Trial
+                </button>
+            </div>
+
+            <!-- Starter Tier -->
+            <div class="pricing-card">
+                <div class="tier-header">
+                    <h2 class="tier-name">Starter</h2>
+                    <p class="tier-description">Perfect for single location restaurants</p>
+                    <div class="price-display">
+                        <span class="price">$45</span>
                         <span class="price-unit">/month</span>
                     </div>
                 </div>
@@ -333,11 +412,7 @@
                     </li>
                     <li class="feature-item">
                         <span class="feature-icon check">✓</span>
-                        <span class="feature-text">Professional P&L Export (Excel)</span>
-                    </li>
-                    <li class="feature-item">
-                        <span class="feature-icon check">✓</span>
-                        <span class="feature-text">Basic P&L Calculator</span>
+                        <span class="feature-text">Professional P&L Reports</span>
                     </li>
                     <li class="feature-item">
                         <span class="feature-icon check">✓</span>
@@ -345,28 +420,24 @@
                     </li>
                     <li class="feature-item">
                         <span class="feature-icon check">✓</span>
-                        <span class="feature-text">Basic Analytics</span>
+                        <span class="feature-text">Basic Inventory Management</span>
                     </li>
                     <li class="feature-item">
                         <span class="feature-icon check">✓</span>
-                        <span class="feature-text">Single Location</span>
+                        <span class="feature-text">Recipe Cost Calculator</span>
                     </li>
                     <li class="feature-item">
-                        <span class="feature-icon x">✗</span>
-                        <span class="feature-text">Advanced Inventory Management</span>
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">1 Location</span>
                     </li>
                     <li class="feature-item">
-                        <span class="feature-icon x">✗</span>
-                        <span class="feature-text">AI-Powered Predictive Analytics</span>
-                    </li>
-                    <li class="feature-item">
-                        <span class="feature-icon x">✗</span>
-                        <span class="feature-text">Multi-Location Support</span>
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">Email Support</span>
                     </li>
                 </ul>
 
-                <button class="cta-button cta-secondary" onclick="startFreeTrial()">
-                    Get Started Free
+                <button class="cta-button cta-primary" onclick="upgradeToStarter()">
+                    Choose Starter
                 </button>
             </div>
 
@@ -374,9 +445,9 @@
             <div class="pricing-card featured">
                 <div class="tier-header">
                     <h2 class="tier-name">Pro</h2>
-                    <p class="tier-description">Complete restaurant intelligence solution</p>
+                    <p class="tier-description">Advanced AI intelligence for growing restaurants</p>
                     <div class="price-display">
-                        <span class="price">$9.99</span>
+                        <span class="price">$99</span>
                         <span class="price-unit">/month</span>
                     </div>
                 </div>
@@ -384,19 +455,15 @@
                 <ul class="features-list">
                     <li class="feature-item">
                         <span class="feature-icon check">✓</span>
-                        <span class="feature-text"><strong>Everything in Free</strong></span>
+                        <span class="feature-text"><strong>Everything in Starter</strong></span>
                     </li>
                     <li class="feature-item">
                         <span class="feature-icon check">✓</span>
-                        <span class="feature-text">Advanced Inventory Management</span>
+                        <span class="feature-text">Advanced AI Analytics</span>
                     </li>
                     <li class="feature-item">
                         <span class="feature-icon check">✓</span>
-                        <span class="feature-text">AI-Powered Truck Ordering</span>
-                    </li>
-                    <li class="feature-item">
-                        <span class="feature-icon check">✓</span>
-                        <span class="feature-text">Predictive Analytics & Forecasting</span>
+                        <span class="feature-text">Predictive Inventory Optimization</span>
                     </li>
                     <li class="feature-item">
                         <span class="feature-icon check">✓</span>
@@ -404,28 +471,79 @@
                     </li>
                     <li class="feature-item">
                         <span class="feature-icon check">✓</span>
-                        <span class="feature-text">Recipe Cost Management</span>
+                        <span class="feature-text">AI-Powered Truck Ordering</span>
                     </li>
                     <li class="feature-item">
                         <span class="feature-icon check">✓</span>
-                        <span class="feature-text">Target & Goal Tracking</span>
+                        <span class="feature-text">Up to 3 Locations</span>
                     </li>
                     <li class="feature-item">
                         <span class="feature-icon check">✓</span>
-                        <span class="feature-text">Multi-Location Support</span>
+                        <span class="feature-text">POS Integration</span>
                     </li>
                     <li class="feature-item">
                         <span class="feature-icon check">✓</span>
                         <span class="feature-text">Priority Support</span>
                     </li>
-                    <li class="feature-item">
-                        <span class="feature-icon check">✓</span>
-                        <span class="feature-text">API Access</span>
-                    </li>
                 </ul>
 
                 <button class="cta-button cta-primary" onclick="upgradeToPro()">
-                    Start Pro Trial
+                    Choose Pro
+                </button>
+            </div>
+
+            <!-- Platinum Tier -->
+            <div class="pricing-card premium">
+                <div class="tier-header">
+                    <h2 class="tier-name">Platinum</h2>
+                    <p class="tier-description">Enterprise solution for restaurant chains</p>
+                    <div class="price-display">
+                        <span class="price">$299</span>
+                        <span class="price-unit">/month</span>
+                    </div>
+                </div>
+
+                <ul class="features-list">
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text"><strong>Everything in Pro</strong></span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">Unlimited Locations</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">Advanced Multi-Location Analytics</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">Custom AI Model Training</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">White-Label Solutions</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">Dedicated Success Manager</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">Custom Integrations</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">24/7 Phone Support</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">API Access & Webhooks</span>
+                    </li>
+                </ul>
+
+                <button class="cta-button cta-premium" onclick="upgradeToPlatinum()">
+                    Choose Platinum
                 </button>
             </div>
         </div>
@@ -489,6 +607,37 @@
             window.location.href = '/dashboard.html?tier=free';
         }
 
+        async function upgradeToStarter() {
+            try {
+                // Create Stripe checkout session for Starter tier
+                const response = await fetch('http://localhost:3001/api/create-checkout-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        priceId: 'price_starter_monthly', // Will be configured in Stripe
+                        tier: 'starter',
+                        successUrl: window.location.origin + '/success.html',
+                        cancelUrl: window.location.href
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to create checkout session');
+                }
+
+                const { url } = await response.json();
+                
+                // Redirect to Stripe Checkout
+                window.location.href = url;
+                
+            } catch (error) {
+                console.error('Checkout error:', error);
+                alert('Unable to start checkout. Please try again or contact support.');
+            }
+        }
+
         async function upgradeToPro() {
             try {
                 // Create Stripe checkout session for Pro tier
@@ -520,12 +669,45 @@
             }
         }
 
+        async function upgradeToPlatinum() {
+            try {
+                // Create Stripe checkout session for Platinum tier
+                const response = await fetch('http://localhost:3001/api/create-checkout-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        priceId: 'price_platinum_monthly', // Will be configured in Stripe
+                        tier: 'platinum',
+                        successUrl: window.location.origin + '/success.html',
+                        cancelUrl: window.location.href
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to create checkout session');
+                }
+
+                const { url } = await response.json();
+                
+                // Redirect to Stripe Checkout
+                window.location.href = url;
+                
+            } catch (error) {
+                console.error('Checkout error:', error);
+                alert('Unable to start checkout. Please try again or contact support.');
+            }
+        }
+
         // Check for success/cancel URL params
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             
             if (urlParams.get('success')) {
-                alert('🎉 Welcome to Pro! Your subscription is now active.');
+                const tier = urlParams.get('tier') || 'Pro';
+                const tierName = tier.charAt(0).toUpperCase() + tier.slice(1);
+                alert(`🎉 Welcome to ${tierName}! Your subscription is now active.`);
             }
             
             if (urlParams.get('canceled')) {

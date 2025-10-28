@@ -1,13 +1,51 @@
 {
+  "name": "restaurant-intelligence-platform",
+  "version": "1.0.0",
+  "description": "Viking Restaurant Intelligence Platform with AI-powered analytics and Stripe subscriptions",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server-manager.js",
+    "start:prod": "node server.js",
+    "start:safe": "node server-manager.js",
+    "dev": "node working-ai-server.js",
+    "dev:safe": "node server-manager.js",
+    "test": "node test-server.js",
+    "test:patents": "node patent-feature-tests.js",
+    "health": "curl -f http://localhost:8080/health || exit 1",
+    "build": "echo 'No build step required for Node.js'",
+    "postinstall": "echo 'Installation complete - Restaurant Intelligence Platform ready'",
+    "logs": "Get-Content logs\\server-manager.log -Tail 50 -Wait",
+    "restart": "taskkill /F /IM node.exe 2>$null; npm run start"
+  },
+  "keywords": [
+    "restaurant",
+    "intelligence",
+    "ai",
+    "analytics",
+    "stripe",
+    "viking"
+  ],
+  "author": "Viking Restaurant Consultants",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
   "devDependencies": {
     "eslint": "^9.38.0"
   },
   "dependencies": {
+    "applicationinsights": "^3.12.0",
+    "compression": "^1.8.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "exceljs": "^4.4.0",
     "express": "^5.1.0",
+    "express-rate-limit": "^7.5.1",
+    "helmet": "^8.1.0",
+    "morgan": "^1.10.1",
     "node-fetch": "^2.7.0",
-    "stripe": "^19.1.0"
+    "stripe": "^19.1.0",
+    "winston": "^3.18.3"
   }
 }

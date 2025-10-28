@@ -5,24 +5,19 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 // Pricing plan configuration
 const pricingPlans = {
   starter: {
-    priceId: process.env.STRIPE_STARTER_PRICE_ID || 'price_starter_45',
+    priceId: process.env.STRIPE_STARTER_PRICE_ID || 'price_starter_monthly',
     name: 'Starter Plan',
     amount: 4500, // $45.00 in cents
   },
   pro: {
-    priceId: process.env.STRIPE_PRO_PRICE_ID || 'price_pro_100',
+    priceId: process.env.STRIPE_PRO_PRICE_ID || 'price_pro_monthly',
     name: 'Pro Plan',
-    amount: 10000, // $100.00 in cents
+    amount: 9900, // $99.00 in cents
   },
   platinum: {
-    priceId: process.env.STRIPE_PLATINUM_PRICE_ID || 'price_platinum_199',
+    priceId: process.env.STRIPE_PLATINUM_PRICE_ID || 'price_platinum_monthly',
     name: 'Platinum Plan',
-    amount: 19900, // $199.00 in cents
-  },
-  enterprise: {
-    priceId: process.env.STRIPE_ENTERPRISE_PRICE_ID || 'price_enterprise_400',
-    name: 'Enterprise Plan',
-    amount: 40000, // $400.00 in cents
+    amount: 29900, // $299.00 in cents
   }
 };
 
@@ -52,7 +47,7 @@ router.post('/create-checkout-session', async (req, res) => {
     const priceId = requestPriceId || selectedPlan.priceId;
     
     // Check if price ID is configured
-    if (priceId.includes('REPLACE') || priceId.startsWith('price_starter') || priceId.startsWith('price_pro') || priceId.startsWith('price_platinum') || priceId.startsWith('price_enterprise')) {
+    if (priceId.includes('REPLACE') || priceId.includes('_monthly')) {
       // For demo purposes, create a dynamic price if using placeholder IDs
       console.log(`Creating checkout for ${selectedPlan.name} at $${selectedPlan.amount / 100}`);
       

@@ -1,0 +1,15 @@
+# Restaurant Intelligence Platform - Azure Developer CLI Configuration
+name: restaurant-intelligence-platform
+metadata:
+  template: restaurant-intelligence-platform@0.0.1-beta
+workflows:
+  up:
+    steps:
+      - azd: provision
+      - azd: deploy
+services:
+  web:
+    project: .
+    dist: .
+    language: js
+    host: appservice

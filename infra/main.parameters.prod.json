@@ -1,0 +1,32 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "value": "East US"
+    },
+    "environmentName": {
+      "value": "prod"
+    },
+    "appName": {
+      "value": "restaurant-intelligence"
+    },
+    "appServicePlanSku": {
+      "value": "B2"
+    },
+    "cosmosDbAccountName": {
+      "value": "restaurant-intelligence-cosmos-prod"
+    },
+    "tags": {
+      "value": {
+        "Project": "Restaurant Intelligence Platform",
+        "Owner": "Viking Restaurant Consultants",
+        "Environment": "Production",
+        "CostCenter": "Product Development",
+        "Workload": "Web Application",
+        "CreatedBy": "Azure Developer CLI",
+        "CreatedDate": "2025-10-28"
+      }
+    }
+  }
+}
