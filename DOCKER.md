@@ -2,6 +2,8 @@
 
 This document describes the Docker setup for Odin's Almanac, a three-tier application architecture.
 
+> **Note**: This Docker configuration is prepared for a Java Spring Boot backend and React frontend. The current repository contains a Node.js Express server. To use this Docker setup, implement the Java backend (with Maven build) and React frontend, or modify the Dockerfiles to match your current technology stack.
+
 ## Architecture Overview
 
 ```

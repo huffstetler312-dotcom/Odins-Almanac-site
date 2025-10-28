@@ -14,10 +14,8 @@ yarn-error.log*
 .gitignore
 .github
 
-# Documentation (excluding DOCKER.md as it's useful for reference)
+# Documentation
 *.md
-!README.md
-!DOCKER.md
 *.pdf
 NAMING_FIXES_REPORT.pdf
 GITHUB_TOKEN_AND_PUSH_GUIDE.md
@@ -38,7 +36,7 @@ Thumbs.db
 coverage
 *.lcov
 
-# Build artifacts (but keep target for Maven builds)
+# Build artifacts
 dist
 .next
 
