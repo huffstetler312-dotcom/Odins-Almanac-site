@@ -1,0 +1,59 @@
+{
+  "name": "odins-almanac-site",
+  "description": "AI-powered restaurant food safety platform with automated compliance, real-time monitoring, and intelligent analytics",
+  "repository": "https://github.com/Viking-Restaurant-Consultants/Odins-Almanac-site",
+  "logo": "https://raw.githubusercontent.com/Viking-Restaurant-Consultants/Odins-Almanac-site/main/client/public/logo.png",
+  "keywords": [
+    "restaurant",
+    "food-safety",
+    "haccp",
+    "compliance",
+    "ai",
+    "nodejs",
+    "express",
+    "stripe"
+  ],
+  "success_url": "/",
+  "website": "https://vikingrestaurantconsultants.com",
+  "env": {
+    "NODE_ENV": {
+      "description": "Node.js environment",
+      "value": "production"
+    },
+    "APP_BASE_URL": {
+      "description": "Base URL for the application",
+      "generator": "url"
+    },
+    "STRIPE_SECRET_KEY": {
+      "description": "Stripe secret key for payment processing"
+    },
+    "STRIPE_PUBLISHABLE_KEY": {
+      "description": "Stripe publishable key for frontend"
+    },
+    "STRIPE_STARTER_PRICE_ID": {
+      "description": "Stripe price ID for Starter plan ($45/month)"
+    },
+    "STRIPE_PRO_PRICE_ID": {
+      "description": "Stripe price ID for Pro plan ($100/month)"
+    },
+    "STRIPE_PLATINUM_PRICE_ID": {
+      "description": "Stripe price ID for Platinum plan ($199/month)"
+    },
+    "STRIPE_ENTERPRISE_PRICE_ID": {
+      "description": "Stripe price ID for Enterprise plan ($400/month)"
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "basic"
+    }
+  },
+  "addons": [],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ],
+  "stack": "heroku-20"
+}

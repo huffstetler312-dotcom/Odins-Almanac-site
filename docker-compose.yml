@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # Odin's Almanac Server
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+      - APP_BASE_URL=http://localhost:8080
+      # Add your Stripe keys here or use .env file
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY:-sk_test_REPLACE_WITH_YOUR_KEY}
+      - STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY:-pk_test_REPLACE_WITH_YOUR_KEY}
+      - STRIPE_STARTER_PRICE_ID=${STRIPE_STARTER_PRICE_ID:-price_starter_45}
+      - STRIPE_PRO_PRICE_ID=${STRIPE_PRO_PRICE_ID:-price_pro_100}
+      - STRIPE_PLATINUM_PRICE_ID=${STRIPE_PLATINUM_PRICE_ID:-price_platinum_199}
+      - STRIPE_ENTERPRISE_PRICE_ID=${STRIPE_ENTERPRISE_PRICE_ID:-price_enterprise_400}
+    volumes:
+      # Mount source code for development hot-reload
+      - ./server:/app
+      - /app/node_modules
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - odin-network
+
+  # Optional: Redis for session storage (future enhancement)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - odin-network
+    profiles:
+      - full-stack
+
+  # Optional: PostgreSQL for production data (future enhancement)
+  database:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: odins_almanac
+      POSTGRES_USER: odin
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dev_password_change_in_production}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - odin-network
+    profiles:
+      - full-stack
+
+networks:
+  odin-network:
+    driver: bridge
+
+volumes:
+  redis_data:
+    driver: local
+  postgres_data:
+    driver: local
