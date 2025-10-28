@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Intelligence Platform - Enterprise Demo</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 40px 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+        .platform-title { 
+            font-size: 2.5rem; 
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        .feature-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2d3748;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #4a5568;
+        }
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.2s ease;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .textarea-field {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .demo-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        .demo-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .response-area {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .loading {
+            display: inline-flex;
+            align-items: center;
+            color: #667eea;
+            font-weight: 500;
+        }
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #e2e8f0;
+            border-top: 2px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .success { color: #059669; }
+        .error { color: #dc2626; }
+        .download-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: #059669;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        .download-link:hover {
+            background: #047857;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="platform-title">Restaurant Intelligence Platform</h1>
+            <p class="subtitle">Enterprise-Grade Business Intelligence & Analytics Suite</p>
+        </div>
+
+        <div class="demo-grid">
+            <div class="feature-card">
+                <h2 class="feature-title">🎯 AI Business Consultant</h2>
+                <div class="input-group">
+                    <label class="input-label">Business Challenge or Question:</label>
+                    <textarea 
+                        id="consultationQuery" 
+                        class="input-field textarea-field" 
+                        placeholder="Example: Our food costs are 35% of revenue. How can we optimize this while maintaining quality?"
+                    ></textarea>
+                </div>
+                <button id="consultationBtn" class="demo-button" onclick="testBusinessConsultation()">
+                    Generate AI Consultation
+                </button>
+                <div id="consultationResponse" class="response-area" style="display: none;"></div>
+            </div>
+
+            <div class="feature-card">
+                <h2 class="feature-title">📊 Financial Analytics Suite</h2>
+                <div class="input-group">
+                    <label class="input-label">Restaurant Name:</label>
+                    <input 
+                        id="restaurantName" 
+                        class="input-field" 
+                        placeholder="Enter your restaurant name"
+                        value="Viking's Feast Restaurant"
+                    />
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Business Goals:</label>
+                    <textarea 
+                        id="businessGoals" 
+                        class="input-field textarea-field" 
+                        placeholder="Example: Increase profit margins by 15%, reduce food waste, optimize menu pricing"
+                    >Increase profit margins by 15%, optimize menu pricing strategy, reduce food waste by 20%, and improve operational efficiency</textarea>
+                </div>
+                <button id="analyticsBtn" class="demo-button" onclick="generateFinancialAnalysis()">
+                    Generate Excel Report
+                </button>
+                <div id="analyticsResponse" class="response-area" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function testBusinessConsultation() {
+            const query = document.getElementById('consultationQuery').value || 
+                         "Our restaurant is experiencing declining profit margins. What specific strategies should we implement to optimize our financial performance?";
+            const btn = document.getElementById('consultationBtn');
+            const responseDiv = document.getElementById('consultationResponse');
+            
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner"></div>Analyzing Business Challenge...';
+            responseDiv.style.display = 'block';
+            responseDiv.innerHTML = '<div class="loading"><div class="spinner"></div>Processing your business consultation request...</div>';
+
+            try {
+                const response = await fetch('http://localhost:3001/api/ai/test-direct', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: query })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    responseDiv.innerHTML = `
+                        <div class="success">
+                            <h4>✅ Business Intelligence Analysis Complete</h4>
+                            <div style="margin-top: 15px; padding: 15px; background: white; border-radius: 6px; line-height: 1.6;">
+                                ${result.oracle_response.response.replace(/\n/g, '<br>')}
+                            </div>
+                            <small style="opacity: 0.7; margin-top: 10px; display: block;">
+                                Analysis completed at ${new Date().toLocaleString()}
+                            </small>
+                        </div>
+                    `;
+                } else {
+                    throw new Error(result.error || 'Analysis failed');
+                }
+            } catch (error) {
+                responseDiv.innerHTML = `
+                    <div class="error">
+                        <h4>❌ Analysis Error</h4>
+                        <p>Unable to complete business analysis: ${error.message}</p>
+                        <p><small>Please ensure the AI server is running on localhost:3001</small></p>
+                    </div>
+                `;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Generate AI Consultation';
+            }
+        }
+
+        async function generateFinancialAnalysis() {
+            const restaurantName = document.getElementById('restaurantName').value || 'Viking\'s Feast Restaurant';
+            const businessGoals = document.getElementById('businessGoals').value || 
+                                 'Increase profit margins and optimize operational efficiency';
+            const btn = document.getElementById('analyticsBtn');
+            const responseDiv = document.getElementById('analyticsResponse');
+            
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner"></div>Generating Excel Report...';
+            responseDiv.style.display = 'block';
+            responseDiv.innerHTML = '<div class="loading"><div class="spinner"></div>Creating comprehensive financial analysis report...</div>';
+
+            try {
+                const response = await fetch('http://localhost:3001/api/ai/generate-spreadsheet', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        goals: businessGoals,
+                        query: `Generate a comprehensive financial analysis for ${restaurantName} focused on: ${businessGoals}` 
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    const features = result.features ? result.features.map(f => `<li>${f}</li>`).join('') : '';
+                    responseDiv.innerHTML = `
+                        <div class="success">
+                            <h4>✅ Financial Analysis Complete</h4>
+                            <p><strong>Restaurant:</strong> ${restaurantName}</p>
+                            <div style="margin: 15px 0; padding: 15px; background: white; border-radius: 6px;">
+                                <strong>Report Features:</strong>
+                                <ul style="margin-top: 10px; margin-left: 20px;">
+                                    ${features}
+                                </ul>
+                            </div>
+                            <a href="http://localhost:3001${result.download_url}" 
+                               class="download-link" 
+                               download="${result.filename}">
+                                📥 Download Excel Report
+                            </a>
+                            <small style="opacity: 0.7; margin-top: 15px; display: block;">
+                                Report generated at ${new Date().toLocaleString()}
+                            </small>
+                        </div>
+                    `;
+                } else {
+                    throw new Error(result.error || 'Report generation failed');
+                }
+            } catch (error) {
+                responseDiv.innerHTML = `
+                    <div class="error">
+                        <h4>❌ Report Generation Error</h4>
+                        <p>Unable to generate financial report: ${error.message}</p>
+                        <p><small>Please ensure the AI server is running on localhost:3001</small></p>
+                    </div>
+                `;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Generate Excel Report';
+            }
+        }
+
+        // Auto-populate consultation field with a professional example
+        document.getElementById('consultationQuery').value = "Our restaurant is experiencing declining profit margins and increased food costs. We need strategic recommendations to optimize our menu pricing, reduce waste, and improve overall profitability while maintaining food quality and customer satisfaction.";
+    </script>
+</body>
+</html>

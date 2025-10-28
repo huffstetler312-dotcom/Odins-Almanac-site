@@ -1,0 +1,55 @@
+{
+  "expo": {
+    "name": "Restaurant P&L Manager",
+    "slug": "restaurant-pl-manager",
+    "scheme": "restaurant-pl-manager",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "description": "Comprehensive profit & loss tracking and inventory management for restaurants. Track targets, monitor performance, and optimize operations with real-time insights.",
+    "primaryColor": "#2563EB",
+    "backgroundColor": "#F9FAFB",
+    "icon": "./assets/images/icon-1024.png",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#2563EB"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.restaurantpl.manager",
+      "buildNumber": "1",
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app uses camera to scan receipts and inventory items.",
+        "NSPhotoLibraryUsageDescription": "This app accesses photo library to save and import receipt images.",
+        "NSMicrophoneUsageDescription": "This app uses microphone for voice notes and inventory recording."
+      }
+    },
+    "android": {
+      "edgeToEdgeEnabled": true,
+      "package": "com.restaurantpl.manager",
+      "versionCode": 1
+    },
+    "privacy": "public",
+    "category": "business",
+    "keywords": [
+      "restaurant",
+      "profit",
+      "loss",
+      "inventory",
+      "business",
+      "pos",
+      "management",
+      "finance",
+      "food",
+      "analytics"
+    ]
+  }
+}

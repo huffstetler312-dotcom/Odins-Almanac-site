@@ -1,0 +1,58 @@
+
+    <svg width="1170" height="2532" viewBox="0 0 1170 2532" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="splashGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#2563EB;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#1D4ED8;stop-opacity:1" />
+        </linearGradient>
+      </defs>
+      
+      <!-- Background -->
+      <rect x="0" y="0" width="1170" height="2532" fill="url(#splashGradient)" />
+      
+      <!-- App icon in center -->
+      <g transform="translate(285, 966)">
+        
+    
+      <defs>
+        <linearGradient id="backgroundGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#2563EB;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#1D4ED8;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:#10B981;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+        </linearGradient>
+      </defs>
+      
+      <!-- Background with rounded corners -->
+      <rect x="0" y="0" width="1024" height="1024" rx="180" ry="180" fill="url(#backgroundGradient)" />
+      
+      <!-- Main chart container -->
+      <rect x="128" y="256" width="768" height="512" rx="40" ry="40" fill="white" fill-opacity="0.15" />
+      
+      <!-- Chart bars representing P&L data -->
+      <rect x="200" y="450" width="80" height="200" rx="40" ry="40" fill="url(#chartGradient)" />
+      <rect x="320" y="400" width="80" height="250" rx="40" ry="40" fill="url(#chartGradient)" />
+      <rect x="440" y="350" width="80" height="300" rx="40" ry="40" fill="url(#chartGradient)" />
+      <rect x="560" y="380" width="80" height="270" rx="40" ry="40" fill="url(#chartGradient)" />
+      <rect x="680" y="320" width="80" height="330" rx="40" ry="40" fill="url(#chartGradient)" />
+      
+      <!-- Restaurant/Chef hat icon -->
+      <circle cx="512" cy="180" r="60" fill="white" />
+      <path d="M 452 180 Q 452 140 492 140 Q 512 120 532 140 Q 572 140 572 180 L 572 220 Q 572 240 552 240 L 472 240 Q 452 240 452 220 Z" fill="white" />
+      
+      <!-- Profit arrow -->
+      <path d="M 780 300 L 820 260 L 860 300 L 840 300 L 840 380 L 800 380 L 800 300 Z" fill="#10B981" />
+      
+      <!-- Dollar sign -->
+      <text x="512" y="850" text-anchor="middle" font-family="Arial, sans-serif" font-size="120" font-weight="bold" fill="white">$</text>
+    
+  
+      </g>
+      
+      <!-- App name -->
+      <text x="585" y="1750" text-anchor="middle" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white">Restaurant P&L Manager</text>
+      <text x="585" y="1820" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="300" fill="white" fill-opacity="0.8">Profit & Loss Made Simple</text>
+    </svg>
+  

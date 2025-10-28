@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Odin's Almanac - Viking Color Palette & Style Guide</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+            line-height: 1.6;
+        }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+        
+        /* VIKING COLOR PALETTE */
+        :root {
+            /* Primary Colors - Storm & Sea */
+            --viking-storm: #667eea;     /* Storm Blue */
+            --viking-deep: #764ba2;      /* Deep Purple */
+            --viking-night: #1a1a2e;     /* Night Sky */
+            --viking-ocean: #16213e;     /* Ocean Deep */
+            --viking-fjord: #0f3460;     /* Fjord Blue */
+            
+            /* Accent Colors - Gold & Fire */
+            --viking-gold: #FFD700;      /* Odin's Gold */
+            --viking-amber: #FFA500;     /* Amber Flame */
+            --viking-bronze: #CD7F32;    /* Bronze Shield */
+            --viking-copper: #B87333;    /* Copper Weapon */
+            
+            /* Status Colors - Battle Results */
+            --viking-victory: #10B981;   /* Victory Green */
+            --viking-warning: #F59E0B;   /* Warning Horn */
+            --viking-danger: #EF4444;    /* Battle Red */
+            --viking-frost: #6B7280;     /* Frost Gray */
+            
+            /* Neutral Colors - Runes & Stone */
+            --viking-rune: #374151;      /* Rune Stone */
+            --viking-ash: #9CA3AF;       /* Ash Gray */
+            --viking-snow: #F9FAFB;      /* Snow White */
+            --viking-shadow: rgba(0,0,0,0.5);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 0;
+            background: linear-gradient(135deg, var(--viking-storm) 0%, var(--viking-deep) 100%);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px var(--viking-shadow);
+        }
+        
+        .title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--viking-gold), var(--viking-amber));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 2px 2px 4px var(--viking-shadow);
+        }
+        
+        .subtitle {
+            font-size: 1.4rem;
+            color: var(--viking-snow);
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        /* COLOR PALETTE SHOWCASE */
+        .palette-section {
+            margin: 40px 0;
+            background: rgba(255,255,255,0.05);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .palette-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--viking-gold);
+            font-weight: 600;
+        }
+        
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .color-card {
+            background: rgba(255,255,255,0.08);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .color-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px var(--viking-shadow);
+            border-color: var(--viking-gold);
+        }
+        
+        .color-swatch {
+            width: 100%;
+            height: 80px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+        
+        .color-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        
+        .color-hex {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: var(--viking-ash);
+            background: rgba(0,0,0,0.3);
+            padding: 5px 8px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        
+        .color-description {
+            font-size: 0.9rem;
+            margin-top: 8px;
+            opacity: 0.8;
+        }
+        
+        /* COMPONENT EXAMPLES */
+        .component-section {
+            margin: 40px 0;
+        }
+        
+        .btn-viking {
+            background: linear-gradient(45deg, var(--viking-gold), var(--viking-amber));
+            color: var(--viking-night);
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-viking:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.3);
+            filter: brightness(1.1);
+        }
+        
+        .btn-storm {
+            background: linear-gradient(45deg, var(--viking-storm), var(--viking-deep));
+            color: white;
+        }
+        
+        .btn-storm:hover {
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .metric-demo {
+            background: rgba(255,255,255,0.95);
+            color: var(--viking-night);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .metric-demo:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px var(--viking-shadow);
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .victory { color: var(--viking-victory); }
+        .warning { color: var(--viking-warning); }
+        .danger { color: var(--viking-danger); }
+        .gold { color: var(--viking-gold); }
+        
+        .rune-border {
+            border: 2px solid var(--viking-gold);
+            border-image: linear-gradient(45deg, var(--viking-gold), var(--viking-amber)) 1;
+            position: relative;
+        }
+        
+        .rune-border::before {
+            content: "⚔️";
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: var(--viking-night);
+            padding: 5px 10px;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">⚔️ Odin's Almanac</h1>
+            <p class="subtitle">Viking Color Palette & Design System</p>
+            <p style="opacity: 0.7; margin-top: 15px;">Restaurant Intelligence Platform - Design Guide</p>
+        </div>
+        
+        <!-- PRIMARY COLORS -->
+        <div class="palette-section">
+            <h2 class="palette-title">🌊 Primary Colors - Storm & Sea</h2>
+            <div class="color-grid">
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #667eea;"></div>
+                    <div class="color-name">Viking Storm</div>
+                    <div class="color-hex">#667eea</div>
+                    <div class="color-description">Primary blue - represents the fierce Nordic storms</div>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #764ba2;"></div>
+                    <div class="color-name">Viking Deep</div>
+                    <div class="color-hex">#764ba2</div>
+                    <div class="color-description">Deep purple - the depths of Norse mythology</div>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #1a1a2e;"></div>
+                    <div class="color-name">Viking Night</div>
+                    <div class="color-hex">#1a1a2e</div>
+                    <div class="color-description">Dark navy - the endless Nordic nights</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ACCENT COLORS -->
+        <div class="palette-section">
+            <h2 class="palette-title">👑 Accent Colors - Gold & Fire</h2>
+            <div class="color-grid">
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #FFD700;"></div>
+                    <div class="color-name">Odin's Gold</div>
+                    <div class="color-hex">#FFD700</div>
+                    <div class="color-description">Pure gold - the treasure of the All-Father</div>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #FFA500;"></div>
+                    <div class="color-name">Amber Flame</div>
+                    <div class="color-hex">#FFA500</div>
+                    <div class="color-description">Warm amber - the eternal flames of Valhalla</div>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #CD7F32;"></div>
+                    <div class="color-name">Bronze Shield</div>
+                    <div class="color-hex">#CD7F32</div>
+                    <div class="color-description">Battle bronze - forged weapons and shields</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- STATUS COLORS -->
+        <div class="palette-section">
+            <h2 class="palette-title">⚔️ Status Colors - Battle Results</h2>
+            <div class="color-grid">
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #10B981;"></div>
+                    <div class="color-name">Victory Green</div>
+                    <div class="color-hex">#10B981</div>
+                    <div class="color-description">Success & profit - victories in battle and business</div>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #F59E0B;"></div>
+                    <div class="color-name">Warning Horn</div>
+                    <div class="color-hex">#F59E0B</div>
+                    <div class="color-description">Caution & alerts - the sound of the war horn</div>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #EF4444;"></div>
+                    <div class="color-name">Battle Red</div>
+                    <div class="color-hex">#EF4444</div>
+                    <div class="color-description">Danger & losses - the heat of battle</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- COMPONENT EXAMPLES -->
+        <div class="palette-section">
+            <h2 class="palette-title">🛡️ Component Examples</h2>
+            
+            <h3 style="color: var(--viking-gold); margin: 30px 0 15px;">Buttons</h3>
+            <button class="btn-viking">Upgrade to Pro</button>
+            <button class="btn-viking btn-storm">View Dashboard</button>
+            <a href="#" class="btn-viking">Start Free Trial</a>
+            
+            <h3 style="color: var(--viking-gold); margin: 30px 0 15px;">Metric Cards</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <div class="metric-demo">
+                    <div class="metric-value victory">$45,250</div>
+                    <div>Monthly Revenue</div>
+                </div>
+                <div class="metric-demo">
+                    <div class="metric-value warning">28.5%</div>
+                    <div>Food Cost %</div>
+                </div>
+                <div class="metric-demo">
+                    <div class="metric-value danger">32.8%</div>
+                    <div>Labor Cost %</div>
+                </div>
+                <div class="metric-demo">
+                    <div class="metric-value gold">19.3%</div>
+                    <div>Profit Margin</div>
+                </div>
+            </div>
+            
+            <h3 style="color: var(--viking-gold); margin: 30px 0 15px;">Special Effects</h3>
+            <div class="palette-section rune-border">
+                <p style="margin-top: 20px;">This card uses the Viking rune border effect with gold gradient and sword emoji accent.</p>
+            </div>
+        </div>
+        
+        <!-- USAGE GUIDELINES -->
+        <div class="palette-section">
+            <h2 class="palette-title">📜 Usage Guidelines</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px;">
+                <div>
+                    <h4 style="color: var(--viking-gold); margin-bottom: 15px;">✅ Best Practices</h4>
+                    <ul style="line-height: 2; opacity: 0.9;">
+                        <li>Use Storm/Deep gradient for headers</li>
+                        <li>Gold accents for CTAs and highlights</li>
+                        <li>Victory green for positive metrics</li>
+                        <li>Battle red for warnings/issues</li>
+                        <li>Maintain Norse/Viking theming</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color: var(--viking-danger); margin-bottom: 15px;">❌ Avoid</h4>
+                    <ul style="line-height: 2; opacity: 0.9;">
+                        <li>Mixing with non-Viking themes</li>
+                        <li>Overusing gold (loses impact)</li>
+                        <li>Pure white backgrounds</li>
+                        <li>Too many bright colors together</li>
+                        <li>Breaking the gradient patterns</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

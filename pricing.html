@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing - Restaurant Intelligence Platform</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --viking-storm: #667eea;     
+            --viking-deep: #764ba2;      
+            --viking-night: #1a1a2e;     
+            --viking-ocean: #16213e;     
+            --viking-gold: #FFD700;      
+            --viking-amber: #FFA500;     
+            --viking-victory: #10B981;   
+            --viking-warning: #F59E0B;   
+            --viking-danger: #EF4444;    
+            --viking-shadow: rgba(0,0,0,0.15);
+        }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, var(--viking-night) 0%, var(--viking-ocean) 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 40px 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            color: white;
+        }
+        
+        .platform-title { 
+            font-size: 3.5rem; 
+            font-weight: 800;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, var(--viking-gold), var(--viking-amber));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .pricing-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.15);
+        }
+        
+        .pricing-card.featured {
+            border: 3px solid #667eea;
+            transform: scale(1.05);
+        }
+        
+        .pricing-card.featured::before {
+            content: "MOST POPULAR";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        
+        .tier-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-top: 20px;
+        }
+        
+        .tier-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #1e293b;
+        }
+        
+        .tier-description {
+            color: #64748b;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+        
+        .price-display {
+            margin-bottom: 30px;
+        }
+        
+        .price {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        
+        .price-unit {
+            font-size: 1.1rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+        
+        .features-list {
+            list-style: none;
+            margin-bottom: 40px;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 8px 0;
+        }
+        
+        .feature-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        
+        .feature-icon.check {
+            color: #22c55e;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .feature-icon.x {
+            color: #ef4444;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .feature-text {
+            color: #374151;
+            font-size: 0.95rem;
+        }
+        
+        .cta-button {
+            width: 100%;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .cta-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .cta-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .cta-secondary {
+            background: #f8fafc;
+            color: #475569;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .cta-secondary:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+        
+        .guarantee-section {
+            text-align: center;
+            margin-top: 60px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 40px;
+            color: white;
+        }
+        
+        .guarantee-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .guarantee-text {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .faq-section {
+            background: white;
+            border-radius: 20px;
+            padding: 50px 40px;
+            margin-top: 40px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.1);
+        }
+        
+        .faq-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            color: #1e293b;
+        }
+        
+        .faq-item {
+            margin-bottom: 25px;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 20px;
+        }
+        
+        .faq-question {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+        
+        .faq-answer {
+            color: #64748b;
+            line-height: 1.6;
+        }
+        
+        .navigation {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .nav-link {
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: background-color 0.2s ease;
+        }
+        
+        .nav-link:hover {
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .container { padding: 20px 15px; }
+            .platform-title { font-size: 2.2rem; }
+            .pricing-grid { grid-template-columns: 1fr; gap: 20px; }
+            .pricing-card.featured { transform: none; }
+            .tier-header { padding-top: 30px; }
+            .faq-section { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="navigation">
+            <a href="professional-demo.html" class="nav-link">← Back to Platform</a>
+            <a href="comprehensive-pl-builder.html" class="nav-link">P&L Builder</a>
+        </div>
+
+        <div class="header">
+            <div class="badge">PRICING</div>
+            <h1 class="platform-title">Restaurant Intelligence Platform</h1>
+            <p class="subtitle">All-seeing AI intelligence for your restaurant operations</p>
+            <p style="opacity: 0.8;">Start free, upgrade when ready for advanced features</p>
+        </div>
+
+        <div class="pricing-grid">
+            <!-- Free Tier -->
+            <div class="pricing-card">
+                <div class="tier-header">
+                    <h2 class="tier-name">Free</h2>
+                    <p class="tier-description">Perfect for getting started with restaurant analytics</p>
+                    <div class="price-display">
+                        <span class="price">$0</span>
+                        <span class="price-unit">/month</span>
+                    </div>
+                </div>
+
+                <ul class="features-list">
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">Real-time Dashboard</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">Professional P&L Export (Excel)</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">Basic P&L Calculator</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">AI Business Consultant</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">Basic Analytics</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">Single Location</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon x">✗</span>
+                        <span class="feature-text">Advanced Inventory Management</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon x">✗</span>
+                        <span class="feature-text">AI-Powered Predictive Analytics</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon x">✗</span>
+                        <span class="feature-text">Multi-Location Support</span>
+                    </li>
+                </ul>
+
+                <button class="cta-button cta-secondary" onclick="startFreeTrial()">
+                    Get Started Free
+                </button>
+            </div>
+
+            <!-- Pro Tier -->
+            <div class="pricing-card featured">
+                <div class="tier-header">
+                    <h2 class="tier-name">Pro</h2>
+                    <p class="tier-description">Complete restaurant intelligence solution</p>
+                    <div class="price-display">
+                        <span class="price">$9.99</span>
+                        <span class="price-unit">/month</span>
+                    </div>
+                </div>
+
+                <ul class="features-list">
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text"><strong>Everything in Free</strong></span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">Advanced Inventory Management</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">AI-Powered Truck Ordering</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">Predictive Analytics & Forecasting</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">Variance Analysis & Loss Prevention</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">Recipe Cost Management</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">Target & Goal Tracking</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">Multi-Location Support</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">Priority Support</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon check">✓</span>
+                        <span class="feature-text">API Access</span>
+                    </li>
+                </ul>
+
+                <button class="cta-button cta-primary" onclick="upgradeToPro()">
+                    Start Pro Trial
+                </button>
+            </div>
+        </div>
+
+        <div class="guarantee-section">
+            <h3 class="guarantee-title">💰 30-Day Money-Back Guarantee</h3>
+            <p class="guarantee-text">
+                Try Restaurant Intelligence Platform risk-free. If you're not completely satisfied within 30 days, 
+                we'll refund your money, no questions asked.
+            </p>
+        </div>
+
+        <div class="faq-section">
+            <h2 class="faq-title">Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <h3 class="faq-question">What's included in the free tier?</h3>
+                <p class="faq-answer">
+                    The free tier includes our complete P&L calculator, AI business consultant, professional Excel exports, 
+                    and basic analytics. It's perfect for single-location restaurants getting started with data-driven operations.
+                </p>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="faq-question">How does the Pro upgrade work?</h3>
+                <p class="faq-answer">
+                    Pro unlocks advanced AI features including predictive analytics, automated inventory management, 
+                    variance analysis, and multi-location support. You can upgrade anytime and cancel with no long-term commitment.
+                </p>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="faq-question">Is my restaurant data secure?</h3>
+                <p class="faq-answer">
+                    Absolutely. We use enterprise-grade encryption and security measures to protect your data. 
+                    Your information is never shared with third parties and remains completely confidential.
+                </p>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="faq-question">Can I integrate with my POS system?</h3>
+                <p class="faq-answer">
+                    Yes! Our platform supports integration with major POS systems. We provide detailed setup guides 
+                    and our Pro tier includes priority support to help with integrations.
+                </p>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="faq-question">What makes this different from other restaurant software?</h3>
+                <p class="faq-answer">
+                    Our platform combines proven P&L management with cutting-edge AI analytics. We use patentable algorithms 
+                    for inventory optimization, waste prediction, and variance analysis - giving you insights no other platform provides.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function startFreeTrial() {
+            // Redirect to professional dashboard demo
+            window.location.href = '/dashboard.html?tier=free';
+        }
+
+        async function upgradeToPro() {
+            try {
+                // Create Stripe checkout session for Pro tier
+                const response = await fetch('http://localhost:3001/api/create-checkout-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        priceId: 'price_pro_monthly', // Will be configured in Stripe
+                        tier: 'pro',
+                        successUrl: window.location.origin + '/success.html',
+                        cancelUrl: window.location.href
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to create checkout session');
+                }
+
+                const { url } = await response.json();
+                
+                // Redirect to Stripe Checkout
+                window.location.href = url;
+                
+            } catch (error) {
+                console.error('Checkout error:', error);
+                alert('Unable to start checkout. Please try again or contact support.');
+            }
+        }
+
+        // Check for success/cancel URL params
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            if (urlParams.get('success')) {
+                alert('🎉 Welcome to Pro! Your subscription is now active.');
+            }
+            
+            if (urlParams.get('canceled')) {
+                alert('Checkout was canceled. You can upgrade anytime!');
+            }
+        });
+    </script>
+</body>
+</html>

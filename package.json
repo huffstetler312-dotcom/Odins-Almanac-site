@@ -1,5 +1,13 @@
 {
   "devDependencies": {
     "eslint": "^9.38.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "exceljs": "^4.4.0",
+    "express": "^5.1.0",
+    "node-fetch": "^2.7.0",
+    "stripe": "^19.1.0"
   }
 }

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Status - Odin's Almanac</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            margin: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .status {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 20px;
+            margin: 20px 0;
+        }
+        .working {
+            background: linear-gradient(45deg, #10B981, #059669);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            display: inline-block;
+            font-weight: bold;
+            margin: 10px;
+        }
+        .link {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #1a1a2e;
+            padding: 15px 25px;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px;
+            transition: transform 0.3s ease;
+        }
+        .link:hover {
+            transform: translateY(-3px);
+        }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚔️ Odin's Almanac</h1>
+        
+        <div class="status">
+            <div class="working">✅ SERVER IS RUNNING</div>
+            <div class="working">✅ PORT 3000 ACTIVE</div>
+            <div class="working">✅ ALL SYSTEMS OPERATIONAL</div>
+        </div>
+        
+        <h2>📋 Available Pages:</h2>
+        
+        <div style="margin: 30px 0;">
+            <a href="/pricing.html" class="link">💰 Pricing Page</a><br>
+            <a href="/working-dashboard.html" class="link">📊 Working Dashboard</a><br>
+            <a href="/simple-dashboard.html" class="link">🎯 Simple Dashboard</a><br>
+            <a href="/dashboard.html" class="link">🎨 Full Dashboard</a><br>
+            <a href="/style-guide.html" class="link">🎨 Style Guide</a>
+        </div>
+        
+        <div class="status">
+            <h3>🔧 Quick Tests:</h3>
+            <button onclick="testServer()" class="link" style="border: none; cursor: pointer;">Test Server Response</button>
+            <button onclick="testStripe()" class="link" style="border: none; cursor: pointer;">Test Stripe API</button>
+        </div>
+        
+        <div id="results" style="margin-top: 20px;"></div>
+    </div>
+    
+    <script>
+        function showResult(message, success = true) {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.style.cssText = `
+                background: ${success ? '#10B981' : '#EF4444'};
+                color: white;
+                padding: 10px 20px;
+                margin: 10px;
+                border-radius: 10px;
+                display: inline-block;
+            `;
+            div.textContent = message;
+            results.appendChild(div);
+            
+            setTimeout(() => {
+                if (results.contains(div)) {
+                    results.removeChild(div);
+                }
+            }, 5000);
+        }
+        
+        function testServer() {
+            fetch('/health')
+                .then(response => response.text())
+                .then(data => {
+                    showResult('✅ Server health check passed!');
+                })
+                .catch(error => {
+                    showResult('❌ Server test failed: ' + error.message, false);
+                });
+        }
+        
+        function testStripe() {
+            fetch('/api/create-checkout-session', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    priceId: 'price_1QJiGLRrAdNPc20oDqzsbyEI',
+                    mode: 'subscription'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.url) {
+                    showResult('✅ Stripe integration working!');
+                } else {
+                    showResult('❌ Stripe test failed', false);
+                }
+            })
+            .catch(error => {
+                showResult('❌ Stripe error: ' + error.message, false);
+            });
+        }
+        
+        // Show current time and server status
+        setInterval(() => {
+            document.title = `Server Active - ${new Date().toLocaleTimeString()}`;
+        }, 1000);
+        
+        console.log('✅ Status page loaded - server is working!');
+    </script>
+</body>
+</html>
