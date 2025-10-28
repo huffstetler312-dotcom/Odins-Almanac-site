@@ -18,10 +18,10 @@
     "ignoreDeprecations": "6.0"
   },
   "include": [
-    "./**/*.js",
-    "./**/*.ts",
-    "server/**/*.js",
-    "server/**/*.ts"
+    "./*.js",
+    "./server/**/*.js",
+    "./server-manager.js",
+    "./patent-feature-tests.js"
   ],
   "exclude": [
     "node_modules",

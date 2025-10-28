@@ -475,15 +475,33 @@ app.post('/api/create-checkout-session', async (req, res) => {
   try {
     const { priceId, tier, successUrl, cancelUrl } = req.body;
     
-    // In production, you would create these prices in Stripe Dashboard
+    // Enterprise pricing tiers for production deployment
     const priceConfig = {
-      'price_pro_monthly': {
-        unit_amount: 999, // $9.99 in cents
+      'price_starter_monthly': {
+        unit_amount: 4500, // $45.00 in cents
         currency: 'usd',
         recurring: { interval: 'month' },
         product_data: {
-          name: 'Restaurant Intelligence Platform Pro',
-          description: 'Complete AI-powered restaurant analytics and management'
+          name: 'Restaurant Intelligence Platform - Starter',
+          description: 'Essential AI-powered restaurant analytics for small restaurants'
+        }
+      },
+      'price_pro_monthly': {
+        unit_amount: 9900, // $99.00 in cents  
+        currency: 'usd',
+        recurring: { interval: 'month' },
+        product_data: {
+          name: 'Restaurant Intelligence Platform - Pro',
+          description: 'Advanced AI analytics and management for multi-location chains'
+        }
+      },
+      'price_platinum_monthly': {
+        unit_amount: 29900, // $299.00 in cents
+        currency: 'usd',
+        recurring: { interval: 'month' },
+        product_data: {
+          name: 'Restaurant Intelligence Platform - Platinum',
+          description: 'Enterprise-grade AI platform for franchise operations'
         }
       }
     };
@@ -508,7 +526,7 @@ app.post('/api/create-checkout-session', async (req, res) => {
     console.log('💳 Stripe checkout session created:', {
       sessionId: session.id,
       tier: tier,
-      amount: '$9.99/month'
+      amount: tier === 'starter' ? '$45/month' : tier === 'pro' ? '$99/month' : '$299/month'
     });
 
     res.json({ url: session.url });

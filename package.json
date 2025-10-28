@@ -11,7 +11,7 @@
     "dev:safe": "node server-manager.js",
     "test": "node test-server.js",
     "test:patents": "node patent-feature-tests.js",
-    "health": "curl -f http://localhost:8080/health || exit 1",
+    "health": "curl -f http://localhost:3000/health || exit 1",
     "build": "echo 'No build step required for Node.js'",
     "postinstall": "echo 'Installation complete - Restaurant Intelligence Platform ready'",
     "logs": "Get-Content logs\\server-manager.log -Tail 50 -Wait",

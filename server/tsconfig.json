@@ -29,7 +29,8 @@
   },
   "include": [
     "./**/*.js",
-    "./**/*.ts"
+    "./routes/**/*.js",
+    "./lib/**/*.js"
   ],
   "exclude": [
     "node_modules",

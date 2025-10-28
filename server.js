@@ -34,7 +34,7 @@ const winston = require('winston');
 const app = express();
 
 // Environment configuration
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const IS_PRODUCTION = NODE_ENV === 'production';
 

@@ -263,7 +263,7 @@
             <h1>Viking Restaurant Consultants</h1>
             <h2>Odin'"'"'s Almanac</h2>
             <p>Introducing <strong>Odin'"'"'s Eye</strong> - The most advanced restaurant financial intelligence platform. Harness the power of AI-driven inventory management, cost control, and profit optimization to conquer your restaurant'"'"'s financial landscape.</p>
-            <a href="#pricing" class="cta-button">Get Odin'"'"'s Eye Now - $97/month</a>
+            <a href="#pricing" class="cta-button">Start Free Trial - Enterprise Plans from $45/month</a>
         </div>
     </section>    <section id="features" class="section">
         <div class="container">
@@ -325,7 +325,7 @@
         <div class="container">
             <h2 class="section-title">Odin'"'"'s Eye Pricing</h2>
             <div class="pricing-card">
-                <div class="price">$97</div>
+                <div class="price">$99</div>
                 <div class="price-period">per month</div>
                 <ul class="pricing-features">
                     <li>Complete Odin'"'"'s Eye Financial Platform</li>
@@ -349,7 +349,7 @@
             <h2 class="section-title">Ready to Optimize Your Restaurant'"'"'s Finances?</h2>
             <p class="footer-text">Join hundreds of restaurants already using Odin'"'"'s Eye to maximize profitability</p>
             <div class="footer-cta">
-                <button class="cta-button" onclick="purchaseOdinsEye()">Start Your Financial Transformation - $97/month</button>
+                <button class="cta-button" onclick="purchaseOdinsEye()">Start Free Trial - Enterprise from $45/month</button>
             </div>
         </div>
     </section>
@@ -378,20 +378,20 @@
             alert("📋 Par Level Management Demo\n\nIntelligent Recommendations:\n• Chicken Breast: Increase par from 40lbs to 45lbs\n• Tomatoes: Seasonal adjustment - reduce to 15lbs\n• Wine Inventory: Optimize by vintage and demand\n• Automatic reorder triggers activated\n\nSmart analysis ready!");
         }
         function demoTruckOrdering() {
-            alert("🚛 Smart Truck Ordering Demo\n\nToday'"'"'s Recommendations:\n• Sysco: $847 order ready (best pricing)\n• US Foods: Alternative quote available\n• Local Suppliers: Specialty items optimized\n• Delivery scheduled for optimal timing\n\nStreamlined ordering ready!");
+            alert("🚛 Smart Truck Ordering Demo\n\nToday's Recommendations:\n• Sysco: $847 order ready (best pricing)\n• US Foods: Alternative quote available\n• Local Suppliers: Specialty items optimized\n• Delivery scheduled for optimal timing\n\nStreamlined ordering ready!");
         }
         function demoCostControl() {
             alert("🎯 Cost Control Dashboard Demo\n\nReal-time Metrics:\n• Food Cost: 28.5% (Target: 30%)\n• Labor Cost: 32.1% (On target)\n• Total COGs: 60.6% (Excellent)\n• Daily P&L: +$1,247\n\nComprehensive monitoring active!");
         }
         function purchaseOdinsEye() {
-            fetch('"'"'/create-checkout-session'"'"', {
-                method: '"'"'POST'"'"',
-                headers: { '"'"'Content-Type'"'"': '"'"'application/json'"'"' },
-                body: JSON.stringify({ priceId: '"'"'price_1QTxBURwJgzb7JIXB8u5XYWK'"'"', quantity: 1 })
+            fetch('/create-checkout-session', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ priceId: 'price_pro_monthly', tier: 'pro' })
             }).then(response => response.json()).then(data => {
                 if (data.url) { window.location = data.url; }
-                else { alert('"'"'Error creating checkout session. Please try again.'"'"'); }
-            }).catch(() => alert('"'"'Error processing request. Please try again.'"'"'));
+                else { alert('Error creating checkout session. Please try again.'); }
+            }).catch(() => alert('Error processing request. Please try again.'));
         }
     </script>
 </body>

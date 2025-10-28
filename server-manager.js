@@ -190,7 +190,7 @@ class ServerManager {
 
     try {
       const { default: fetch } = await import('node-fetch');
-      const response = await fetch('http://localhost:8080/health', { 
+      const response = await fetch('http://localhost:3000/health', { 
         timeout: 5000,
         signal: AbortSignal.timeout(5000)
       });
