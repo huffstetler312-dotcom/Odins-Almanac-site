@@ -57,67 +57,120 @@ STRIPE_ENTERPRISE_PRICE_ID=price_...         # Price ID for Enterprise plan
 
 ### Local Development with Docker Compose
 
+The application uses a three-tier architecture with separate services for database, backend, and frontend.
+
+**Services:**
+- `db`: PostgreSQL 15 database
+- `backend`: Java Spring Boot application (port 8080)
+- `frontend`: React application served by Nginx (port 3000)
+
 1. Clone the repository:
 ```bash
 git clone https://github.com/Viking-Restaurant-Consultants/Odins-Almanac-site.git
 cd Odins-Almanac-site
 ```
 
-2. Create environment files:
+2. Start all services:
 ```bash
-cp .env.example .env
-cp server/.env.example server/.env
+docker compose up -d
 ```
 
-3. Edit both `.env` files with your Stripe credentials
+3. Access the application:
+```
+Frontend: http://localhost:3000
+Backend API: http://localhost:8080
+Database: localhost:5432 (user: odins, password: odins, db: odinsdb)
+```
 
-4. Start the application:
+4. View logs:
 ```bash
-docker-compose up -d
+# All services
+docker compose logs -f
+
+# Specific service
+docker compose logs -f backend
+docker compose logs -f frontend
+docker compose logs -f db
 ```
 
-5. Access the application:
-```
-http://localhost:8080
-```
-
-6. View logs:
+5. Stop the application:
 ```bash
-docker-compose logs -f
+docker compose down
+
+# Remove volumes (database data)
+docker compose down -v
 ```
 
-7. Stop the application:
+6. Rebuild after code changes:
 ```bash
-docker-compose down
+docker compose up -d --build
 ```
 
 ### Production Docker Deployment
 
-1. Build the Docker image:
-```bash
-docker build -t odins-almanac:latest .
+For production deployment with Docker Compose:
+
+1. Update docker-compose.yml for production settings:
+```yaml
+# Add environment variables for production
+backend:
+  environment:
+    - DATABASE_URL=postgres://odins:secure_password@db:5432/odinsdb
+    - PORT=8080
+    - NODE_ENV=production  # if using Node.js backend
+  restart: always
 ```
 
-2. Run the container:
+2. Start services with production configuration:
+```bash
+docker compose -f docker-compose.yml up -d
+```
+
+3. Monitor the deployment:
+```bash
+docker compose ps
+docker compose logs -f
+```
+
+### Individual Service Deployment
+
+If deploying services separately:
+
+**Backend:**
+```bash
+cd /path/to/project
+docker build -f server/Dockerfile -t odins-almanac-backend:latest .
+docker run -d \
+  --name odins-backend \
+  -p 8080:8080 \
+  -e DATABASE_URL=postgres://user:pass@host:5432/dbname \
+  -e PORT=8080 \
+  --restart unless-stopped \
+  odins-almanac-backend:latest
+```
+
+**Frontend:**
+```bash
+cd /path/to/project
+docker build -f client/Dockerfile -t odins-almanac-frontend:latest .
+docker run -d \
+  --name odins-frontend \
+  -p 3000:80 \
+  --restart unless-stopped \
+  odins-almanac-frontend:latest
+```
+
+**Database:**
 ```bash
 docker run -d \
-  --name odins-almanac \
-  -p 8080:8080 \
-  -e NODE_ENV=production \
-  -e APP_BASE_URL=https://your-domain.com \
-  -e STRIPE_SECRET_KEY=sk_live_... \
-  -e STRIPE_PUBLISHABLE_KEY=pk_live_... \
-  -e STRIPE_STARTER_PRICE_ID=price_... \
-  -e STRIPE_PRO_PRICE_ID=price_... \
-  -e STRIPE_PLATINUM_PRICE_ID=price_... \
-  -e STRIPE_ENTERPRISE_PRICE_ID=price_... \
+  --name odins-db \
+  -p 5432:5432 \
+  -e POSTGRES_DB=odinsdb \
+  -e POSTGRES_USER=odins \
+  -e POSTGRES_PASSWORD=secure_password \
+  -v odins_db_data:/var/lib/postgresql/data \
   --restart unless-stopped \
-  odins-almanac:latest
-```
-
-3. Health check:
-```bash
-curl http://localhost:8080/healthz
+  postgres:15
 ```
 
 ### Docker Registry Deployment
