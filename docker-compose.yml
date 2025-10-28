@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  # Odin's Almanac Server
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: odins-almanac-server
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - PORT=8080
+      - APP_BASE_URL=${APP_BASE_URL:-http://localhost:8080}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY}
+      - STRIPE_STARTER_PRICE_ID=${STRIPE_STARTER_PRICE_ID}
+      - STRIPE_PRO_PRICE_ID=${STRIPE_PRO_PRICE_ID}
+      - STRIPE_PLATINUM_PRICE_ID=${STRIPE_PLATINUM_PRICE_ID}
+      - STRIPE_ENTERPRISE_PRICE_ID=${STRIPE_ENTERPRISE_PRICE_ID}
+    # Optional: Load environment from file (create from .env.example)
+    # env_file:
+    #   - ./server/.env
+    volumes:
+      # Mount source code for development (comment out for production)
+      - ./server:/app
+      - /app/node_modules
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/healthz", "||", "exit", "1"]
+      interval: 30s
+      timeout: 3s
+      start_period: 10s
+      retries: 3
+    networks:
+      - odins-network
+
+networks:
+  odins-network:
+    driver: bridge
+
+# Optional: Add nginx reverse proxy for production
+# Uncomment the section below if you want to use nginx
+#
+#  nginx:
+#    image: nginx:alpine
+#    container_name: odins-almanac-nginx
+#    ports:
+#      - "80:80"
+#      - "443:443"
+#    volumes:
+#      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+#      - ./ssl:/etc/nginx/ssl:ro
+#    depends_on:
+#      - server
+#    restart: unless-stopped
+#    networks:
+#      - odins-network

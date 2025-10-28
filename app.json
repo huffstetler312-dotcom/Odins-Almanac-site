@@ -1,0 +1,58 @@
+{
+  "name": "Odin's Almanac - AI Food Safety Platform",
+  "description": "Revolutionary AI-powered food safety and restaurant management platform with HACCP expertise, automated labeling, and financial intelligence.",
+  "repository": "https://github.com/Viking-Restaurant-Consultants/Odins-Almanac-site",
+  "logo": "https://raw.githubusercontent.com/Viking-Restaurant-Consultants/Odins-Almanac-site/main/server/public/odin-logo.png",
+  "keywords": ["node", "express", "food-safety", "restaurant", "haccp", "stripe"],
+  "website": "https://vikingrestaurantconsultants.com",
+  "success_url": "/",
+  "env": {
+    "NODE_ENV": {
+      "description": "Node.js environment (production/development)",
+      "value": "production",
+      "required": true
+    },
+    "APP_BASE_URL": {
+      "description": "Base URL of your application",
+      "value": "https://yourapp.herokuapp.com",
+      "required": true
+    },
+    "STRIPE_SECRET_KEY": {
+      "description": "Stripe secret key from https://dashboard.stripe.com/apikeys",
+      "required": true
+    },
+    "STRIPE_PUBLISHABLE_KEY": {
+      "description": "Stripe publishable key from https://dashboard.stripe.com/apikeys",
+      "required": true
+    },
+    "STRIPE_STARTER_PRICE_ID": {
+      "description": "Stripe price ID for Starter plan",
+      "required": true
+    },
+    "STRIPE_PRO_PRICE_ID": {
+      "description": "Stripe price ID for Pro plan",
+      "required": true
+    },
+    "STRIPE_PLATINUM_PRICE_ID": {
+      "description": "Stripe price ID for Platinum plan",
+      "required": true
+    },
+    "STRIPE_ENTERPRISE_PRICE_ID": {
+      "description": "Stripe price ID for Enterprise plan",
+      "required": true
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "basic"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ],
+  "stack": "heroku-22",
+  "addons": []
+}

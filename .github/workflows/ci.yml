@@ -1,0 +1,80 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: |
+          package-lock.json
+          server/package-lock.json
+
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '11'
+
+    - name: Install root dependencies
+      run: npm ci
+
+    - name: Install server dependencies
+      run: |
+        cd server
+        npm ci
+
+    - name: Run ESLint
+      run: npx eslint . --ext .js --max-warnings 0
+
+    - name: Run server tests
+      run: |
+        cd server
+        npm test
+
+    - name: Build Maven site
+      run: mvn -B clean package -DskipTests
+
+    - name: Start server for integration test
+      run: |
+        cd server
+        npm start &
+        echo $! > server.pid
+        sleep 5
+        # Test if server is running
+        curl -f http://localhost:3000/health || exit 1
+        kill $(cat server.pid)
+
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      run: |
+        cd server
+        npm ci
+
+    - name: Run npm audit
+      run: |
+        cd server
+        npm audit --audit-level=high

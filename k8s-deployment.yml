@@ -1,0 +1,206 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: odins-almanac
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: odins-almanac-config
+  namespace: odins-almanac
+data:
+  NODE_ENV: "production"
+  PORT: "8080"
+  APP_BASE_URL: "https://your-domain.com"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: odins-almanac-secrets
+  namespace: odins-almanac
+type: Opaque
+stringData:
+  # ⚠️ WARNING: Replace these placeholder values with your actual production secrets!
+  # NEVER commit real secrets to version control.
+  # Consider using external secret management tools like:
+  # - Sealed Secrets: https://github.com/bitnami-labs/sealed-secrets
+  # - External Secrets Operator: https://external-secrets.io/
+  # - HashiCorp Vault: https://www.vaultproject.io/
+  # - Cloud provider secret managers (AWS Secrets Manager, Azure Key Vault, GCP Secret Manager)
+  STRIPE_SECRET_KEY: "sk_live_REPLACE_WITH_YOUR_STRIPE_SECRET_KEY"
+  STRIPE_PUBLISHABLE_KEY: "pk_live_REPLACE_WITH_YOUR_STRIPE_PUBLISHABLE_KEY"
+  STRIPE_STARTER_PRICE_ID: "price_REPLACE_WITH_STARTER_PLAN_PRICE_ID"
+  STRIPE_PRO_PRICE_ID: "price_REPLACE_WITH_PRO_PLAN_PRICE_ID"
+  STRIPE_PLATINUM_PRICE_ID: "price_REPLACE_WITH_PLATINUM_PLAN_PRICE_ID"
+  STRIPE_ENTERPRISE_PRICE_ID: "price_REPLACE_WITH_ENTERPRISE_PLAN_PRICE_ID"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: odins-almanac-server
+  namespace: odins-almanac
+  labels:
+    app: odins-almanac
+    component: server
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: odins-almanac
+      component: server
+  template:
+    metadata:
+      labels:
+        app: odins-almanac
+        component: server
+    spec:
+      containers:
+      - name: server
+        # ⚠️ IMPORTANT: Replace 'latest' with specific version tag (e.g., v1.0.0, commit SHA)
+        # Using 'latest' tag in production can cause inconsistent deployments and rollback issues
+        # Example: your-registry/odins-almanac:v1.0.0 or your-registry/odins-almanac:abc123def
+        image: your-registry/odins-almanac:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: odins-almanac-config
+              key: NODE_ENV
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: odins-almanac-config
+              key: PORT
+        - name: APP_BASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: odins-almanac-config
+              key: APP_BASE_URL
+        - name: STRIPE_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: odins-almanac-secrets
+              key: STRIPE_SECRET_KEY
+        - name: STRIPE_PUBLISHABLE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: odins-almanac-secrets
+              key: STRIPE_PUBLISHABLE_KEY
+        - name: STRIPE_STARTER_PRICE_ID
+          valueFrom:
+            secretKeyRef:
+              name: odins-almanac-secrets
+              key: STRIPE_STARTER_PRICE_ID
+        - name: STRIPE_PRO_PRICE_ID
+          valueFrom:
+            secretKeyRef:
+              name: odins-almanac-secrets
+              key: STRIPE_PRO_PRICE_ID
+        - name: STRIPE_PLATINUM_PRICE_ID
+          valueFrom:
+            secretKeyRef:
+              name: odins-almanac-secrets
+              key: STRIPE_PLATINUM_PRICE_ID
+        - name: STRIPE_ENTERPRISE_PRICE_ID
+          valueFrom:
+            secretKeyRef:
+              name: odins-almanac-secrets
+              key: STRIPE_ENTERPRISE_PRICE_ID
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 30
+          timeoutSeconds: 3
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: odins-almanac-server
+  namespace: odins-almanac
+  labels:
+    app: odins-almanac
+    component: server
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app: odins-almanac
+    component: server
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: odins-almanac-ingress
+  namespace: odins-almanac
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  tls:
+  - hosts:
+    - your-domain.com
+    secretName: odins-almanac-tls
+  rules:
+  - host: your-domain.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: odins-almanac-server
+            port:
+              number: 80
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: odins-almanac-hpa
+  namespace: odins-almanac
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: odins-almanac-server
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
