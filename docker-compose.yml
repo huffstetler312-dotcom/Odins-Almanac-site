@@ -15,8 +15,6 @@ services:
       - STRIPE_PRO_PRICE_ID=${STRIPE_PRO_PRICE_ID}
       - STRIPE_PLATINUM_PRICE_ID=${STRIPE_PLATINUM_PRICE_ID}
       - STRIPE_ENTERPRISE_PRICE_ID=${STRIPE_ENTERPRISE_PRICE_ID}
-    env_file:
-      - ./server/.env
     volumes:
       - ./server:/app
       - /app/node_modules

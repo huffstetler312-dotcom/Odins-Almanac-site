@@ -8,9 +8,9 @@ Odin's Almanac transforms restaurant operations from reactive compliance to proa
 ## Quick demo
 
 - **Live demo**: https://odinsalmanac.azurewebsites.net
-- **30s overview**: See `client/public/demo.gif` for a visual walkthrough
+- **30s overview**: See `client/public/demo.gif` for a visual walkthrough (placeholder - replace with actual demo GIF)
 
-![Odin's Almanac Demo](client/public/demo.gif)
+<!-- ![Odin's Almanac Demo](client/public/demo.gif) -->
 
 ## Getting started (developer)
 
