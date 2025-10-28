@@ -1,0 +1,4 @@
+{"environment":"development","level":"info","message":"🏴‍☠️ Viking Restaurant Intelligence Platform started","nodeVersion":"v20.9.0","pid":29836,"port":"3000","service":"restaurant-intelligence","timestamp":"2025-10-28T06:01:44.217Z"}
+{"level":"info","message":"SIGINT received, shutting down gracefully","service":"restaurant-intelligence","timestamp":"2025-10-28T06:01:48.117Z"}
+{"environment":"development","level":"info","message":"🏴‍☠️ Viking Restaurant Intelligence Platform started","nodeVersion":"v20.9.0","pid":10816,"port":"3000","service":"restaurant-intelligence","timestamp":"2025-10-28T06:02:30.598Z"}
+{"level":"info","message":"SIGINT received, shutting down gracefully","service":"restaurant-intelligence","timestamp":"2025-10-28T06:02:55.507Z"}

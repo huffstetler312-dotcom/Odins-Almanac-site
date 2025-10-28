@@ -12,7 +12,8 @@
     "resolveJsonModule": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
+    "ignoreDeprecations": "6.0",
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "declaration": true,
@@ -27,7 +28,8 @@
     "typeRoots": ["./node_modules/@types"]
   },
   "include": [
-    "src/**/*"
+    "./**/*.js",
+    "./**/*.ts"
   ],
   "exclude": [
     "node_modules",
