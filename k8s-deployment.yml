@@ -20,6 +20,13 @@ metadata:
   namespace: odins-almanac
 type: Opaque
 stringData:
+  # ⚠️ WARNING: Replace these placeholder values with your actual production secrets!
+  # NEVER commit real secrets to version control.
+  # Consider using external secret management tools like:
+  # - Sealed Secrets: https://github.com/bitnami-labs/sealed-secrets
+  # - External Secrets Operator: https://external-secrets.io/
+  # - HashiCorp Vault: https://www.vaultproject.io/
+  # - Cloud provider secret managers (AWS Secrets Manager, Azure Key Vault, GCP Secret Manager)
   STRIPE_SECRET_KEY: "sk_live_REPLACE_WITH_YOUR_STRIPE_SECRET_KEY"
   STRIPE_PUBLISHABLE_KEY: "pk_live_REPLACE_WITH_YOUR_STRIPE_PUBLISHABLE_KEY"
   STRIPE_STARTER_PRICE_ID: "price_REPLACE_WITH_STARTER_PLAN_PRICE_ID"
@@ -49,6 +56,9 @@ spec:
     spec:
       containers:
       - name: server
+        # ⚠️ IMPORTANT: Replace 'latest' with specific version tag (e.g., v1.0.0, commit SHA)
+        # Using 'latest' tag in production can cause inconsistent deployments and rollback issues
+        # Example: your-registry/odins-almanac:v1.0.0 or your-registry/odins-almanac:abc123def
         image: your-registry/odins-almanac:latest
         imagePullPolicy: Always
         ports:

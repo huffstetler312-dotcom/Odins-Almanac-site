@@ -513,9 +513,9 @@ Experience the full platform with:
 - Mobile-responsive design
 
 ### Video Demos
-- 🎥 **30-Second Overview**: [Watch on YouTube](https://your-demo-url.com) *(Coming soon)*
-- 📺 **Full Platform Walkthrough**: [Watch on YouTube](https://your-demo-url.com) *(Coming soon)*
-- 🎬 **API Integration Guide**: [Watch on YouTube](https://your-demo-url.com) *(Coming soon)*
+- 🎥 **30-Second Overview**: Coming soon - will showcase key features and value proposition
+- 📺 **Full Platform Walkthrough**: Coming soon - complete product demonstration
+- 🎬 **API Integration Guide**: Coming soon - developer-focused integration tutorial
 
 ### Additional Resources
 - 📚 **API Documentation**: Check the API Endpoints section above
