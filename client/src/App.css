@@ -1,0 +1,45 @@
+.App {
+  text-align: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a0e13 0%, #1a2332 50%, #2c3545 100%);
+  color: white;
+}
+
+.App-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-size: calc(10px + 2vmin);
+}
+
+.App-header h1 {
+  font-family: 'Cinzel', serif;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: #ffd700;
+}
+
+.App-header p {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  color: #cbd5e1;
+}
+
+.App-header button {
+  background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%);
+  border: none;
+  color: #0a0e13;
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.App-header button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(255, 215, 0, 0.3);
+}
