@@ -152,19 +152,6 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Trust proxy (important for Azure App Service)
 app.set('trust proxy', 1);
 
-// Serve static files for downloads
-app.use('/download', express.static(path.join(__dirname, 'generated-spreadsheets'), {
-  maxAge: IS_PRODUCTION ? '1d' : '0',
-  etag: true
-}));
-
-// Serve static HTML files (pricing page, success page, etc.)
-app.use(express.static(__dirname, {
-  maxAge: IS_PRODUCTION ? '1h' : '0',
-  etag: true,
-  index: false // Prevent auto-serving index.html
-}));
-
 // Security headers middleware
 app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -186,15 +173,9 @@ app.use((req, res, next) => {
   next();
 });
 
-// Homepage route - serve pricing page as main landing page
-app.get('/', (req, res) => {
-  try {
-    res.sendFile(path.join(__dirname, 'pricing.html'));
-  } catch (error) {
-    logger.error('Error serving homepage:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
+// ============================================
+// API ROUTES (MUST COME BEFORE STATIC FILES)
+// ============================================
 
 // Health check endpoint (Azure App Service ready)
 app.get('/health', (req, res) => {
@@ -284,7 +265,109 @@ app.post('/api/ai/test-direct', async (req, res) => {
   }
 });
 
-// Stripe webhook endpoint (must be before JSON parsing for raw body)
+// Stripe Checkout Session - CREATE SUBSCRIPTION
+app.post('/api/create-checkout-session', async (req, res) => {
+  try {
+    // Check if Stripe is properly configured
+    if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY.includes('REPLACE')) {
+      return res.status(500).json({ 
+        error: 'Stripe not configured', 
+        message: 'Please contact support to complete your subscription setup.' 
+      });
+    }
+
+    // Import Stripe dynamically to handle potential configuration issues
+    const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+    // Pricing plan configuration
+    const pricingPlans = {
+      starter: {
+        priceId: process.env.STRIPE_STARTER_PRICE_ID || 'price_starter_monthly',
+        name: 'Starter Plan',
+        amount: 4500, // $45.00 in cents
+      },
+      pro: {
+        priceId: process.env.STRIPE_PRO_PRICE_ID || 'price_pro_monthly', 
+        name: 'Pro Plan',
+        amount: 9900, // $99.00 in cents
+      },
+      platinum: {
+        priceId: process.env.STRIPE_PLATINUM_PRICE_ID || 'price_platinum_monthly',
+        name: 'Platinum Plan',
+        amount: 29900, // $299.00 in cents
+      }
+    };
+
+    // Get plan from request body, default to pro plan
+    const { plan = 'pro', priceId: requestPriceId, planName } = req.body;
+    
+    // Validate the plan
+    if (plan && !pricingPlans[plan]) {
+      return res.status(400).json({ 
+        error: 'Invalid plan', 
+        message: 'Please select a valid subscription plan.' 
+      });
+    }
+
+    // Get pricing configuration
+    const selectedPlan = pricingPlans[plan];
+    const priceId = requestPriceId || selectedPlan.priceId;
+    
+    logger.info('Creating Stripe checkout session', { 
+      plan: selectedPlan.name, 
+      amount: selectedPlan.amount,
+      priceId 
+    });
+
+    const baseUrl = req.get('host').includes('localhost') 
+      ? `http://${req.get('host')}` 
+      : `https://${req.get('host')}`;
+    
+    const session = await stripe.checkout.sessions.create({
+      mode: 'subscription',
+      line_items: [
+        { price: priceId, quantity: 1 }
+      ],
+      success_url: `${baseUrl}/success.html?session_id={CHECKOUT_SESSION_ID}&plan=${plan}`,
+      cancel_url: `${baseUrl}/?canceled=true&plan=${plan}`,
+      metadata: {
+        plan: plan,
+        planName: selectedPlan.name
+      },
+      // Add trial period for all plans
+      subscription_data: {
+        trial_period_days: 14,
+        metadata: {
+          plan: plan,
+          planName: selectedPlan.name
+        }
+      }
+    });
+    
+    logger.info('Stripe checkout session created', { 
+      sessionId: session.id, 
+      url: session.url,
+      plan: selectedPlan.name 
+    });
+
+    res.json({ 
+      url: session.url,
+      plan: selectedPlan.name,
+      amount: `$${selectedPlan.amount / 100}/month`,
+      sessionId: session.id
+    });
+
+  } catch (error) {
+    logger.error('Stripe checkout error:', error);
+    res.status(500).json({ 
+      error: 'Checkout error', 
+      message: 'Unable to create checkout session. Please contact support.',
+      details: IS_PRODUCTION ? 'Internal server error' : error.message
+    });
+  }
+});
+
+// Stripe webhook endpoint (must handle raw body)
 app.post('/api/stripe/webhook', express.raw({type: 'application/json'}), (req, res) => {
   const sig = req.headers['stripe-signature'];
   
@@ -299,6 +382,33 @@ app.post('/api/stripe/webhook', express.raw({type: 'application/json'}), (req, r
     res.status(400).json({ error: 'Webhook signature verification failed' });
   }
 });
+
+// ============================================
+// STATIC FILES & HOMEPAGE (AFTER API ROUTES)
+// ============================================
+
+// Serve static files for downloads
+app.use('/download', express.static(path.join(__dirname, 'generated-spreadsheets'), {
+  maxAge: IS_PRODUCTION ? '1d' : '0',
+  etag: true
+}));
+
+// Homepage route - serve pricing page as main landing page
+app.get('/', (req, res) => {
+  try {
+    res.sendFile(path.join(__dirname, 'pricing.html'));
+  } catch (error) {
+    logger.error('Error serving homepage:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Serve static HTML files (pricing page, success page, etc.) - LAST!
+app.use(express.static(__dirname, {
+  maxAge: IS_PRODUCTION ? '1h' : '0',
+  etag: true,
+  index: false // Prevent auto-serving index.html
+}));
 
 // Error handling middleware
 app.use((error, req, res, next) => {
