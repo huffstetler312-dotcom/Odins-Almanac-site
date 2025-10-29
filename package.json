@@ -28,7 +28,7 @@
   "author": "Viking Restaurant Consultants",
   "license": "UNLICENSED",
   "engines": {
-    "node": "20.x",
+    "node": ">=20.0.0",
     "npm": ">=8.0.0"
   },
   "devDependencies": {
