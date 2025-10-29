@@ -26,3 +26,14 @@
 [2025-10-28T18:04:57.691Z] [INFO] Received SIGINT (Ctrl+C), shutting down gracefully
 [2025-10-28T18:04:57.693Z] [INFO] Stopping server...
 [2025-10-28T18:04:57.718Z] [INFO] Server process closed with code null, signal SIGTERM
+[2025-10-28T18:41:03.484Z] [INFO] Starting server (attempt 1/10)
+[2025-10-28T18:41:03.500Z] [INFO] Server started with PID: 35780
+[2025-10-28T18:41:24.370Z] [INFO] Received SIGINT (Ctrl+C), shutting down gracefully
+[2025-10-28T18:41:24.374Z] [INFO] Stopping server...
+[2025-10-28T18:41:24.389Z] [INFO] Server process closed with code null, signal SIGTERM
+[2025-10-28T18:41:55.819Z] [INFO] Starting server (attempt 1/10)
+[2025-10-28T18:41:55.834Z] [INFO] Server started with PID: 21904
+[2025-10-28T18:42:26.123Z] [INFO] Server recently restarted, monitoring closely
+[2025-10-28T18:43:06.646Z] [INFO] Received SIGINT (Ctrl+C), shutting down gracefully
+[2025-10-28T18:43:06.653Z] [INFO] Stopping server...
+[2025-10-28T18:43:06.686Z] [INFO] Server process closed with code null, signal SIGTERM
