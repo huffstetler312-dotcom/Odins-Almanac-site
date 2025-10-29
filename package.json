@@ -2,7 +2,7 @@
   "name": "restaurant-intelligence-platform",
   "version": "1.0.0",
   "description": "Viking Restaurant Intelligence Platform with AI-powered analytics and Stripe subscriptions",
-  "main": "server.js",
+  "main": "server-manager.js",
   "scripts": {
     "start": "node server-manager.js",
     "start:prod": "node server.js",
