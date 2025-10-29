@@ -4,6 +4,10 @@ client/node_modules/
 release.zip
 node_modules/
 
+# Logs
+logs/
+*.log
+
 # Sensitive files with tokens/keys
 *.env
 *.env.txt
