@@ -29,6 +29,7 @@ const compression = require('compression');
 const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
 const winston = require('winston');
+const { listMissingEnv } = require('./server/lib/env-check');
 
 // Initialize Express app
 const app = express();
@@ -197,8 +198,14 @@ app.get('/health', (req, res) => {
 // Readiness probe (for Azure App Service)
 app.get('/ready', (req, res) => {
   // Check if all required environment variables are present
-  const requiredEnvVars = ['STRIPE_PUBLISHABLE_KEY', 'STRIPE_SECRET_KEY'];
-  const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
+  const requiredEnvVars = [
+    'STRIPE_PUBLISHABLE_KEY', 
+    'STRIPE_SECRET_KEY',
+    'DATABASE_URL',
+    'NODE_ENV'
+  ];
+  
+  const missingEnvVars = listMissingEnv(requiredEnvVars);
   
   if (missingEnvVars.length > 0) {
     logger.warn('Readiness check failed - missing environment variables:', missingEnvVars);

@@ -401,6 +401,221 @@ Or use the Azure Portal:
 
 ---
 
+## Azure App Service Setup
+
+This section provides exact Azure CLI commands to configure the Azure Web App for the Odin's Almanac application.
+
+### Prerequisites
+
+- Azure CLI installed and logged in (`az login`)
+- Azure Web App already created: **odinsalmanac**
+- Resource Group: **DefaultResourceGroup-EUS**
+
+### Step 1: Set Required Environment Variables
+
+Configure all required environment variables for the application using the Azure CLI:
+
+```bash
+# Set all application settings in one command
+az webapp config appsettings set \
+  --name odinsalmanac \
+  --resource-group DefaultResourceGroup-EUS \
+  --settings \
+    "STRIPE_PUBLISHABLE_KEY=pk_test_YOUR_KEY_HERE" \
+    "STRIPE_SECRET_KEY=sk_test_YOUR_KEY_HERE" \
+    "DATABASE_URL=postgresql://user:pass@host:5432/db" \
+    "NODE_ENV=production" \
+    "WEBSITE_NODE_DEFAULT_VERSION=~20" \
+    "SCM_DO_BUILD_DURING_DEPLOYMENT=true"
+```
+
+> **⚠️ IMPORTANT**: Replace placeholder values with your actual credentials:
+> - Get Stripe keys from https://dashboard.stripe.com/apikeys
+> - Get DATABASE_URL from your PostgreSQL provider (Neon, Azure Database, etc.)
+> - Keep these values secure and never commit them to version control
+
+### Step 2: Set Optional Environment Variables
+
+Add optional variables for enhanced functionality:
+
+```bash
+# Application Insights (for monitoring and telemetry)
+az webapp config appsettings set \
+  --name odinsalmanac \
+  --resource-group DefaultResourceGroup-EUS \
+  --settings \
+    "APPLICATIONINSIGHTS_CONNECTION_STRING=InstrumentationKey=YOUR_KEY;IngestionEndpoint=https://..."
+
+# GitHub Token (if needed for repository operations)
+az webapp config appsettings set \
+  --name odinsalmanac \
+  --resource-group DefaultResourceGroup-EUS \
+  --settings \
+    "GITHUB_TOKEN=ghp_YOUR_TOKEN_HERE"
+
+# AI Service Keys (if using AI features)
+az webapp config appsettings set \
+  --name odinsalmanac \
+  --resource-group DefaultResourceGroup-EUS \
+  --settings \
+    "OPENAI_API_KEY=sk-YOUR_OPENAI_KEY" \
+    "ANTHROPIC_API_KEY=sk-ant-YOUR_ANTHROPIC_KEY"
+```
+
+### Step 3: Configure App Service Settings
+
+Set additional App Service configuration:
+
+```bash
+# Enable always-on to prevent cold starts (requires Basic tier or higher)
+az webapp config set \
+  --name odinsalmanac \
+  --resource-group DefaultResourceGroup-EUS \
+  --always-on true
+
+# Set startup command (optional, if needed)
+az webapp config set \
+  --name odinsalmanac \
+  --resource-group DefaultResourceGroup-EUS \
+  --startup-file "node server.js"
+
+# Configure logging
+az webapp log config \
+  --name odinsalmanac \
+  --resource-group DefaultResourceGroup-EUS \
+  --application-logging filesystem \
+  --detailed-error-messages true \
+  --failed-request-tracing true \
+  --web-server-logging filesystem
+```
+
+### Step 4: Restart the Application
+
+After setting environment variables, restart the app to apply changes:
+
+```bash
+az webapp restart \
+  --name odinsalmanac \
+  --resource-group DefaultResourceGroup-EUS
+```
+
+### Step 5: Verify Configuration
+
+Check that all settings were applied correctly:
+
+```bash
+# List all application settings
+az webapp config appsettings list \
+  --name odinsalmanac \
+  --resource-group DefaultResourceGroup-EUS \
+  --output table
+
+# Check app status
+az webapp show \
+  --name odinsalmanac \
+  --resource-group DefaultResourceGroup-EUS \
+  --query "{Name:name, State:state, URL:defaultHostName}" \
+  --output table
+```
+
+### Step 6: Test the Deployment
+
+```bash
+# Test health endpoint
+curl https://odinsalmanac.azurewebsites.net/health
+
+# Test readiness endpoint (shows missing env vars if any)
+curl https://odinsalmanac.azurewebsites.net/ready
+```
+
+### Security Best Practices
+
+#### Keep Secrets Out of the Repository
+
+**✅ DO:**
+- Use Azure App Settings for all secrets and API keys
+- Use `.env.example` file with placeholders for documentation
+- Add `.env` to `.gitignore` to prevent accidental commits
+- Rotate secrets regularly (every 90 days recommended)
+
+**❌ DON'T:**
+- Never commit `.env` files with real secrets
+- Never hardcode API keys in source code
+- Never share secrets in public channels or documentation
+
+#### Using Azure Key Vault (Recommended for Production)
+
+For enhanced security, store secrets in Azure Key Vault and reference them in App Settings:
+
+1. **Create a Key Vault:**
+```bash
+az keyvault create \
+  --name odinsalmanac-vault \
+  --resource-group DefaultResourceGroup-EUS \
+  --location eastus
+```
+
+2. **Store secrets in Key Vault:**
+```bash
+az keyvault secret set \
+  --vault-name odinsalmanac-vault \
+  --name stripe-secret-key \
+  --value "sk_test_YOUR_KEY"
+
+az keyvault secret set \
+  --vault-name odinsalmanac-vault \
+  --name database-url \
+  --value "postgresql://..."
+```
+
+3. **Enable managed identity for your Web App:**
+```bash
+az webapp identity assign \
+  --name odinsalmanac \
+  --resource-group DefaultResourceGroup-EUS
+```
+
+4. **Grant the Web App access to Key Vault:**
+```bash
+# Get the principal ID
+PRINCIPAL_ID=$(az webapp identity show \
+  --name odinsalmanac \
+  --resource-group DefaultResourceGroup-EUS \
+  --query principalId -o tsv)
+
+# Grant access
+az keyvault set-policy \
+  --name odinsalmanac-vault \
+  --object-id $PRINCIPAL_ID \
+  --secret-permissions get list
+```
+
+5. **Reference Key Vault secrets in App Settings:**
+```bash
+az webapp config appsettings set \
+  --name odinsalmanac \
+  --resource-group DefaultResourceGroup-EUS \
+  --settings \
+    "STRIPE_SECRET_KEY=@Microsoft.KeyVault(SecretUri=https://odinsalmanac-vault.vault.azure.net/secrets/stripe-secret-key/)" \
+    "DATABASE_URL=@Microsoft.KeyVault(SecretUri=https://odinsalmanac-vault.vault.azure.net/secrets/database-url/)"
+```
+
+### Python Requirement for AI Agent Subprocesses
+
+> **Note:** This application uses AI agents that may spawn Python subprocesses for certain operations. Azure App Service for Node.js includes Python by default, but if you encounter issues:
+
+1. **Verify Python is available:**
+```bash
+az webapp ssh --name odinsalmanac --resource-group DefaultResourceGroup-EUS
+python --version  # Should show Python 3.x
+```
+
+2. **If Python is not available**, you can add it via a custom deployment script or use a custom container that includes both Node.js and Python.
+
+3. **Alternative:** Set up a separate Azure Function or Container Instance for Python-based AI operations and call them via HTTP from your Node.js app.
+
+---
+
 ## Post-Deployment Steps
 
 ### 1. Run Database Migrations

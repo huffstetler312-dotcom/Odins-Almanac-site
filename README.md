@@ -16,6 +16,61 @@
 
 ---
 
+## 🚀 Quick Start - Local Development
+
+Get started with local development in minutes:
+
+### 1. Install Dependencies
+```bash
+npm install
+```
+
+### 2. Set Up Environment Variables
+```bash
+# Copy the example environment file
+cp .env.example .env
+
+# Edit .env and fill in your actual credentials:
+# - Get Stripe keys from https://dashboard.stripe.com/apikeys
+# - Get Database URL from your PostgreSQL provider (Neon, Azure, etc.)
+# - See .env.example for detailed instructions
+```
+
+### 3. Start the Development Server
+```bash
+npm run start:dev
+```
+
+The server will start on `http://localhost:3001` (or the PORT specified in your .env file).
+
+### 4. Test Spreadsheet Generation
+```bash
+node test-spreadsheet-generation.js
+```
+
+### 5. Check System Readiness
+```bash
+curl http://localhost:3001/ready
+```
+
+This endpoint returns JSON showing which environment variables are missing (if any).
+
+### 6. Run Health Check
+```bash
+npm run health
+# or
+curl http://localhost:3001/health
+```
+
+> ⚠️ **IMPORTANT SECURITY NOTE**  
+> **NEVER commit real API keys or secrets to version control!**  
+> - Use `.env.example` for documentation (with placeholders only)
+> - Keep your actual `.env` file private (it's in `.gitignore`)
+> - For production, use Azure App Settings (see DEPLOYMENT-GUIDE.md)
+> - Consider using Azure Key Vault for enhanced security
+
+---
+
 ## 📦 Package Contents
 
 This deployment package contains everything you need to deploy the Odin's Eye application to Azure:
