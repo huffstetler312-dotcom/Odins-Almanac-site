@@ -412,9 +412,10 @@ app.post('/api/demo/generate-pl-excel', async (req, res) => {
       fs.mkdirSync(outputDir, { recursive: true });
     }
     
-    // Generate filename
+    // Generate filename with proper sanitization to prevent path injection
     const timestamp = Date.now();
-    const filename = `PL_${restaurantName.replace(/[^a-z0-9]/gi, '_')}_${timestamp}.xlsx`;
+    const sanitizedName = restaurantName.replace(/[^a-z0-9]/gi, '_').substring(0, 50);
+    const filename = path.basename(`PL_${sanitizedName}_${timestamp}.xlsx`);
     const filepath = path.join(outputDir, filename);
     
     // Write file
@@ -520,9 +521,10 @@ app.post('/api/demo/generate-pl-csv', async (req, res) => {
       fs.mkdirSync(outputDir, { recursive: true });
     }
     
-    // Generate filename
+    // Generate filename with proper sanitization to prevent path injection
     const timestamp = Date.now();
-    const filename = `PL_${restaurantName.replace(/[^a-z0-9]/gi, '_')}_${timestamp}.csv`;
+    const sanitizedName = restaurantName.replace(/[^a-z0-9]/gi, '_').substring(0, 50);
+    const filename = path.basename(`PL_${sanitizedName}_${timestamp}.csv`);
     const filepath = path.join(outputDir, filename);
     
     // Write file
