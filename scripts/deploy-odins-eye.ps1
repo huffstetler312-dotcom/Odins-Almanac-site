@@ -22,16 +22,16 @@
 #>
 
 param(
-    [string]$SubscriptionId = "5e0e2c8e-e8b7-4cb0-8e5e-c8e7e8b7e8b7",
-    [string]$Region = "eastus",
-    [string]$ResourceGroup = "viking-restaurant-rg",
+    [string]$SubscriptionId = "97d9a3d7-5693-4992-a879-c819818f4e97",
+    [string]$Region = "westcentralus",
+    [string]$ResourceGroup = "DefaultResourceGroup-EUS",
     [switch]$SkipBuild
 )
 
 # Script configuration
 $ErrorActionPreference = "Stop"
-$APP_NAME_PRIMARY = "odins-almanac"
-$APP_NAME_SECONDARY = "odins-valhalla"
+$APP_NAME_PRIMARY = "Odinsalmanac"
+$APP_NAME_SECONDARY = "odins-almanac-backup"
 $APP_SERVICE_PLAN = "viking-app-service-plan"
 $APP_SERVICE_SKU = "B1"
 $RUNTIME_STACK = "NODE:20-lts"
