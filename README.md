@@ -544,3 +544,4 @@ This deployment package is provided by Viking Restaurant Consultants LLC for the
 Made with ⚔️ by Viking Restaurant Consultants LLC
 
 </div>
+# Deployment fix for missing node_modules
