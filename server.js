@@ -415,6 +415,7 @@ app.post('/api/demo/generate-pl-excel', async (req, res) => {
     // Generate filename with proper sanitization to prevent path injection
     const timestamp = Date.now();
     const sanitizedName = restaurantName.replace(/[^a-z0-9]/gi, '_').substring(0, 50);
+    // Use path.basename() as defense-in-depth to ensure no path separators in filename
     const filename = path.basename(`PL_${sanitizedName}_${timestamp}.xlsx`);
     const filepath = path.join(outputDir, filename);
     
@@ -524,6 +525,7 @@ app.post('/api/demo/generate-pl-csv', async (req, res) => {
     // Generate filename with proper sanitization to prevent path injection
     const timestamp = Date.now();
     const sanitizedName = restaurantName.replace(/[^a-z0-9]/gi, '_').substring(0, 50);
+    // Use path.basename() as defense-in-depth to ensure no path separators in filename
     const filename = path.basename(`PL_${sanitizedName}_${timestamp}.csv`);
     const filepath = path.join(outputDir, filename);
     
