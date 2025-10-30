@@ -3,4 +3,15 @@ server/node_modules/
 client/node_modules/
 release.zip
 node_modules/
+
+# Sensitive files with tokens/keys
+*.env
+*.env.txt
+*CONFIGURATION.env*
 server/.env
+HOW_TO_ACCESS_AI_ORACLE.md
+MISSION_3_VICTORY_REPORT.md
+
+# AI agent cache
+ai-agents/__pycache__/
+*.pyc

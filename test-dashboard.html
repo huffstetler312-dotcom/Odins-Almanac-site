@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a2e;
+            color: white;
+        }
+        .test-card {
+            background: white;
+            color: #333;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 10px;
+        }
+        .btn {
+            background: #FFD700;
+            color: #1a1a2e;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>⚔️ Dashboard Test</h1>
+    
+    <div class="test-card">
+        <h2>Revenue: <span id="revenue">$45,250</span></h2>
+        <p>This should update when you click the button below</p>
+    </div>
+    
+    <button class="btn" onclick="updateRevenue()">Update Revenue</button>
+    <button class="btn" onclick="showAlert()">Test Alert</button>
+    <button class="btn" onclick="window.location.href='/pricing.html'">Go to Pricing</button>
+    
+    <script>
+        console.log('Test page loaded');
+        
+        function updateRevenue() {
+            const revenue = document.getElementById('revenue');
+            const current = parseFloat(revenue.textContent.replace(/[$,]/g, ''));
+            const newValue = current + Math.floor(Math.random() * 1000);
+            revenue.textContent = '$' + newValue.toLocaleString();
+            console.log('Revenue updated to:', newValue);
+        }
+        
+        function showAlert() {
+            alert('Dashboard functionality is working!');
+        }
+        
+        // Test auto-update
+        setInterval(() => {
+            console.log('Auto-update triggered');
+            updateRevenue();
+        }, 10000);
+        
+        console.log('All functions loaded');
+    </script>
+</body>
+</html>

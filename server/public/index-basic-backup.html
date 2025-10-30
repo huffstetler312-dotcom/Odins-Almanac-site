@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viking Restaurant Consultants | Odin's Almanac</title>
+    <style>
+        :root {
+            --primary-bg: #1a1a2e;
+            --secondary-bg: #16213e;
+            --accent-gold: #d4af37;
+            --accent-silver: #c0c0c0;
+            --text-light: #f4f4f4;
+            --text-muted: #b0b0b0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            color: var(--text-light);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .logo-image {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
+        .hero-logo {
+            width: 120px;
+            height: 120px;
+            margin: 2rem auto;
+        }
+        header {
+            background: rgba(26, 26, 46, 0.95);
+            padding: 1rem;
+            border-bottom: 2px solid var(--accent-gold);
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-gold);
+        }
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+        h1 {
+            font-size: 3rem;
+            color: var(--accent-gold);
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="/images/odins-almanac-logo.svg" alt="Odin's Almanac Logo" class="logo-image">
+            <div class="logo-text">Viking Restaurant Consultants</div>
+        </div>
+    </header>
+    <section class="hero">
+        <img src="/images/odins-almanac-logo.svg" alt="Odin's Almanac Logo" class="hero-logo">
+        <h1>Odin's Almanac</h1>
+        <p>Restaurant Intelligence Platform</p>
+    </section>
+</body>
+</html>

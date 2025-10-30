@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Oracle Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f0f0f0; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; }
+        .oracle-title { color: #1e3a8a; font-size: 28px; text-align: center; margin-bottom: 20px; }
+        button { background: #1e3a8a; color: white; padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; }
+        button:hover { background: #1e40af; }
+        .result { margin-top: 20px; padding: 15px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; }
+        .loading { color: #6366f1; font-weight: bold; }
+        .response { color: #1f2937; line-height: 1.6; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="oracle-title">🏰 ODIN'S ORACLE AI TEST 🏰</h1>
+        <p>Test your AI Oracle connection:</p>
+        
+        <button onclick="testOracle()">🔮 Test AI Oracle</button>
+        <button onclick="testSpreadsheet()">📊 Test Spreadsheet Creator</button>
+        
+        <div id="result" class="result" style="display:none;"></div>
+    </div>
+
+    <script>
+        async function testOracle() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<div class="loading">🤖 Consulting the Oracle...</div>';
+            
+            try {
+                const response = await fetch('http://localhost:3001/api/ai/test-direct', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        query: "I want to test if you're working. Give me a Viking-themed restaurant tip!" 
+                    })
+                });
+                
+                const data = await response.json();
+                resultDiv.innerHTML = `
+                    <h3>🎉 Oracle Response:</h3>
+                    <div class="response">${data.response || data.consultation || 'Oracle consultation completed!'}</div>
+                    <small>Timestamp: ${new Date().toLocaleTimeString()}</small>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <h3>⚠️ Connection Issue:</h3>
+                    <div class="response">Could not connect to AI Oracle. Make sure the server is running on http://localhost:3001</div>
+                `;
+            }
+        }
+
+        async function testSpreadsheet() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<div class="loading">📊 Generating spreadsheet...</div>';
+            
+            try {
+                const response = await fetch('http://localhost:3001/api/ai/generate-spreadsheet', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        restaurantName: "Viking's Feast",
+                        salesGoal: "monthly",
+                        targetAmount: 50000,
+                        previousYearSales: 45000,
+                        growthPercentage: 15
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.downloadUrl) {
+                    resultDiv.innerHTML = `
+                        <h3>🎉 Spreadsheet Generated!</h3>
+                        <div class="response">
+                            <a href="${data.downloadUrl}" target="_blank" style="color: #1e3a8a; font-weight: bold;">
+                                📥 Download Excel File: ${data.filename}
+                            </a>
+                        </div>
+                        <small>Generated: ${new Date().toLocaleTimeString()}</small>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="response">${JSON.stringify(data, null, 2)}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <h3>⚠️ Spreadsheet Error:</h3>
+                    <div class="response">Could not generate spreadsheet. Error: ${error.message}</div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

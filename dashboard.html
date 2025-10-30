@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Dashboard - Odin's Almanac Restaurant Intelligence</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        /* VIKING COLOR PALETTE */
+        :root {
+            --viking-storm: #667eea;     /* Storm Blue */
+            --viking-deep: #764ba2;      /* Deep Purple */
+            --viking-night: #1a1a2e;     /* Night Sky */
+            --viking-ocean: #16213e;     /* Ocean Deep */
+            --viking-gold: #FFD700;      /* Odin's Gold */
+            --viking-amber: #FFA500;     /* Amber Flame */
+            --viking-bronze: #CD7F32;    /* Bronze Shield */
+            --viking-victory: #10B981;   /* Victory Green */
+            --viking-warning: #F59E0B;   /* Warning Horn */
+            --viking-danger: #EF4444;    /* Battle Red */
+            --viking-frost: #6B7280;     /* Frost Gray */
+            --viking-shadow: rgba(0,0,0,0.15);
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--viking-night) 0%, var(--viking-ocean) 50%, #0f3460 100%) !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh !important;
+        }
+        
+        .viking-bg {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%) !important;
+            min-height: 100vh !important;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--viking-storm) 0%, var(--viking-deep) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .gradient-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+        }
+        
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px var(--viking-shadow), 0 0 30px rgba(255, 215, 0, 0.1);
+        }
+        
+        .metric-card {
+            background: rgba(255, 255, 255, 0.98);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 215, 0, 0.2);
+            box-shadow: 0 8px 32px var(--viking-shadow);
+            position: relative;
+        }
+        
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--viking-gold), var(--viking-amber));
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .progress-95 { width: 95%; }
+        .progress-110 { width: 110%; }
+        .progress-128 { width: 128%; }
+        
+        .pro-badge {
+            background: linear-gradient(45deg, var(--viking-gold), var(--viking-amber));
+            color: var(--viking-night);
+            font-weight: 700;
+            text-shadow: none;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+        
+        .viking-btn {
+            background: linear-gradient(45deg, var(--viking-gold), var(--viking-amber));
+            color: var(--viking-night);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+        }
+        
+        .viking-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+            filter: brightness(1.1);
+        }
+        
+        .viking-btn-secondary {
+            background: linear-gradient(45deg, var(--viking-storm), var(--viking-deep));
+            color: white;
+        }
+        
+        .viking-btn-secondary:hover {
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .ai-insights {
+            background: linear-gradient(135deg, var(--viking-deep) 0%, var(--viking-storm) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ai-insights::before {
+            content: '⚔️';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 3rem;
+            opacity: 0.1;
+        }
+        
+        /* Lightweight CSS Charts */
+        .revenue-trend-container {
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .trend-bars {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            height: 160px;
+            padding: 0 10px;
+            gap: 8px;
+        }
+        
+        .trend-bar {
+            flex: 1;
+            background: var(--color);
+            border-radius: 4px 4px 0 0;
+            min-height: 10px;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .trend-bar:hover {
+            filter: brightness(1.1);
+            transform: translateY(-3px);
+        }
+        
+        .trend-bar::before {
+            content: attr(data-value);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--viking-night);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .trend-bar:hover::before {
+            opacity: 1;
+        }
+        
+        .trend-labels {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 10px 0;
+            font-size: 0.875rem;
+            color: var(--viking-frost);
+        }
+        
+        .cost-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .cost-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+        
+        .cost-label {
+            width: 80px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--viking-frost);
+        }
+        
+        .cost-bar {
+            flex: 1;
+            height: 20px;
+            background: #f3f4f6;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .cost-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.8s ease;
+            position: relative;
+        }
+        
+        .cost-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .cost-value {
+            width: 60px;
+            text-align: right;
+            font-weight: 600;
+            color: var(--viking-night);
+        }
+    </style>
+</head>
+<body class="viking-bg">
+    <!-- Header -->
+    <header class="gradient-bg shadow-2xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-8">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <h1 class="text-4xl font-bold text-white">⚔️ Odin's Almanac</h1>
+                        <p class="text-yellow-100 font-medium">Restaurant Intelligence Platform</p>
+                        <div class="w-16 h-1 bg-gradient-to-r from-yellow-400 to-orange-400 rounded mt-2"></div>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <span class="pro-badge px-3 py-1 rounded-full text-sm font-medium">
+                        <i class="fas fa-crown mr-1"></i>Pro Subscriber
+                    </span>
+                    <button onclick="window.location.href='/pricing.html'" class="viking-btn-secondary px-4 py-2 rounded-lg transition-all mr-2">
+                        <i class="fas fa-arrow-left mr-2"></i>Pricing
+                    </button>
+                    <button class="viking-btn px-4 py-2 rounded-lg transition-all">
+                        <i class="fas fa-user-circle mr-2"></i>Account
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Key Metrics Dashboard -->
+        <div class="mb-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold text-gray-900">P&L Dashboard</h2>
+                <div class="flex space-x-3">
+                    <select id="monthSelector" class="rounded-lg border border-gray-300 px-4 py-2" title="Select Month for P&L Report" aria-label="Month Selection">
+                        <option>October 2025</option>
+                        <option>September 2025</option>
+                        <option>August 2025</option>
+                    </select>
+                    <button class="viking-btn px-4 py-2 rounded-lg transition-all">
+                        <i class="fas fa-download mr-2"></i>Export Report
+                    </button>
+                </div>
+            </div>
+
+            <!-- Real-time Metrics Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Revenue Card -->
+                <div class="metric-card rounded-xl p-6 card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Monthly Revenue</p>
+                            <p class="text-3xl font-bold text-green-600" id="revenue">$45,250</p>
+                            <p class="text-sm text-green-500 flex items-center mt-1">
+                                <i class="fas fa-arrow-up mr-1"></i>+12.5% from last month
+                            </p>
+                        </div>
+                        <div class="text-green-600">
+                            <i class="fas fa-dollar-sign text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Food Cost Card -->
+                <div class="metric-card rounded-xl p-6 card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Food Cost %</p>
+                            <p class="text-3xl font-bold text-orange-600" id="foodCost">28.5%</p>
+                            <p class="text-sm text-green-500 flex items-center mt-1">
+                                <i class="fas fa-arrow-down mr-1"></i>-2.1% (Target: 30%)
+                            </p>
+                        </div>
+                        <div class="text-orange-600">
+                            <i class="fas fa-utensils text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Labor Cost Card -->
+                <div class="metric-card rounded-xl p-6 card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Labor Cost %</p>
+                            <p class="text-3xl font-bold text-blue-600" id="laborCost">32.8%</p>
+                            <p class="text-sm text-red-500 flex items-center mt-1">
+                                <i class="fas fa-arrow-up mr-1"></i>+1.8% (Target: 30%)
+                            </p>
+                        </div>
+                        <div class="text-blue-600">
+                            <i class="fas fa-users text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Net Profit Card -->
+                <div class="metric-card rounded-xl p-6 card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Net Profit</p>
+                            <p class="text-3xl font-bold text-purple-600" id="netProfit">$8,745</p>
+                            <p class="text-sm text-green-500 flex items-center mt-1">
+                                <i class="fas fa-arrow-up mr-1"></i>+15.3% margin: 19.3%
+                            </p>
+                        </div>
+                        <div class="text-purple-600">
+                            <i class="fas fa-chart-line text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Overview -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Revenue Trend - Lightweight CSS Chart -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">Revenue Trend (Last 6 Months)</h3>
+                <div class="revenue-trend-container">
+                    <div class="trend-bars">
+                        <div class="trend-bar" style="height: 65%; --color: var(--viking-victory);" data-month="May" data-value="$38.5K"></div>
+                        <div class="trend-bar" style="height: 85%; --color: var(--viking-victory);" data-month="Jun" data-value="$42.2K"></div>
+                        <div class="trend-bar" style="height: 70%; --color: var(--viking-warning);" data-month="Jul" data-value="$39.8K"></div>
+                        <div class="trend-bar" style="height: 90%; --color: var(--viking-victory);" data-month="Aug" data-value="$44.1K"></div>
+                        <div class="trend-bar" style="height: 75%; --color: var(--viking-warning);" data-month="Sep" data-value="$40.2K"></div>
+                        <div class="trend-bar" style="height: 100%; --color: var(--viking-gold);" data-month="Oct" data-value="$45.3K"></div>
+                    </div>
+                    <div class="trend-labels">
+                        <span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cost Breakdown - Simple Visual -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">Cost Breakdown</h3>
+                <div class="cost-breakdown">
+                    <div class="cost-item">
+                        <div class="cost-label">Food Costs</div>
+                        <div class="cost-bar">
+                            <div class="cost-fill" style="width: 28.5%; background: var(--viking-warning);"></div>
+                        </div>
+                        <div class="cost-value">28.5%</div>
+                    </div>
+                    <div class="cost-item">
+                        <div class="cost-label">Labor Costs</div>
+                        <div class="cost-bar">
+                            <div class="cost-fill" style="width: 32.8%; background: var(--viking-danger);"></div>
+                        </div>
+                        <div class="cost-value">32.8%</div>
+                    </div>
+                    <div class="cost-item">
+                        <div class="cost-label">Operating</div>
+                        <div class="cost-bar">
+                            <div class="cost-fill" style="width: 19.4%; background: var(--viking-frost);"></div>
+                        </div>
+                        <div class="cost-value">19.4%</div>
+                    </div>
+                    <div class="cost-item">
+                        <div class="cost-label">Profit</div>
+                        <div class="cost-bar">
+                            <div class="cost-fill" style="width: 19.3%; background: var(--viking-victory);"></div>
+                        </div>
+                        <div class="cost-value">19.3%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Target vs Actual Analysis -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <h3 class="text-xl font-semibold text-gray-900 mb-6">Target vs Actual Analysis</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Food Cost Target -->
+                <div class="text-center">
+                    <h4 class="text-lg font-medium text-gray-700 mb-3">Food Cost</h4>
+                    <div class="relative pt-1">
+                        <div class="flex mb-2 items-center justify-between">
+                            <div>
+                                <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-orange-600 bg-orange-200">
+                                    Actual
+                                </span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-xs font-semibold inline-block text-orange-600">
+                                    28.5%
+                                </span>
+                            </div>
+                        </div>
+                        <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-orange-200">
+                            <div class="progress-95 shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-orange-500"></div>
+                        </div>
+                        <div class="text-xs text-gray-600">Target: 30% | ✅ Under Target</div>
+                    </div>
+                </div>
+
+                <!-- Labor Cost Target -->
+                <div class="text-center">
+                    <h4 class="text-lg font-medium text-gray-700 mb-3">Labor Cost</h4>
+                    <div class="relative pt-1">
+                        <div class="flex mb-2 items-center justify-between">
+                            <div>
+                                <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-red-600 bg-red-200">
+                                    Actual
+                                </span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-xs font-semibold inline-block text-red-600">
+                                    32.8%
+                                </span>
+                            </div>
+                        </div>
+                        <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-red-200">
+                            <div class="progress-110 shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-red-500"></div>
+                        </div>
+                        <div class="text-xs text-gray-600">Target: 30% | ⚠️ Over Target</div>
+                    </div>
+                </div>
+
+                <!-- Profit Margin Target -->
+                <div class="text-center">
+                    <h4 class="text-lg font-medium text-gray-700 mb-3">Profit Margin</h4>
+                    <div class="relative pt-1">
+                        <div class="flex mb-2 items-center justify-between">
+                            <div>
+                                <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-green-600 bg-green-200">
+                                    Actual
+                                </span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-xs font-semibold inline-block text-green-600">
+                                    19.3%
+                                </span>
+                            </div>
+                        </div>
+                        <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-green-200">
+                            <div class="progress-128 shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-green-500"></div>
+                        </div>
+                        <div class="text-xs text-gray-600">Target: 15% | ✅ Exceeding Target</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI-Powered Insights -->
+        <div class="ai-insights rounded-xl shadow-2xl p-8 text-white mb-8">
+            <h3 class="text-2xl font-bold mb-6">
+                <i class="fas fa-brain mr-3"></i>Odin's Wisdom - AI Insights
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h4 class="font-medium mb-2">🎯 Optimization Opportunities</h4>
+                    <ul class="text-sm space-y-1 opacity-90">
+                        <li>• Reduce labor costs by optimizing shift schedules during slow periods</li>
+                        <li>• Negotiate better pricing with suppliers for high-volume items</li>
+                        <li>• Focus on high-margin menu items during peak hours</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-medium mb-2">📊 Predictive Analytics</h4>
+                    <ul class="text-sm space-y-1 opacity-90">
+                        <li>• Next month's predicted revenue: $47,850 (+5.7%)</li>
+                        <li>• Inventory optimization could save $1,200/month</li>
+                        <li>• Weekend staff adjustment recommended</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Center -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <h3 class="text-xl font-semibold text-gray-900 mb-6">Quick Actions</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <button class="flex items-center justify-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-indigo-500 hover:bg-indigo-50 transition-colors">
+                    <div class="text-center">
+                        <i class="fas fa-calculator text-2xl text-gray-400 mb-2"></i>
+                        <p class="text-sm font-medium text-gray-700">P&L Calculator</p>
+                    </div>
+                </button>
+                
+                <button class="flex items-center justify-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-indigo-500 hover:bg-indigo-50 transition-colors">
+                    <div class="text-center">
+                        <i class="fas fa-boxes text-2xl text-gray-400 mb-2"></i>
+                        <p class="text-sm font-medium text-gray-700">Inventory Check</p>
+                    </div>
+                </button>
+                
+                <button class="flex items-center justify-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-indigo-500 hover:bg-indigo-50 transition-colors">
+                    <div class="text-center">
+                        <i class="fas fa-chart-bar text-2xl text-gray-400 mb-2"></i>
+                        <p class="text-sm font-medium text-gray-700">Analytics</p>
+                    </div>
+                </button>
+                
+                <button class="flex items-center justify-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-indigo-500 hover:bg-indigo-50 transition-colors">
+                    <div class="text-center">
+                        <i class="fas fa-robot text-2xl text-gray-400 mb-2"></i>
+                        <p class="text-sm font-medium text-gray-700">AI Consultant</p>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple and reliable JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Dashboard loading...');
+            
+            // Viking notification function
+            function showNotification(message) {
+                try {
+                    const notification = document.createElement('div');
+                    notification.innerHTML = '⚔️ ' + message;
+                    notification.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: linear-gradient(45deg, #FFD700, #FFA500);
+                        color: #1a1a2e;
+                        padding: 15px 20px;
+                        border-radius: 10px;
+                        font-weight: 600;
+                        z-index: 1000;
+                        box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
+                    `;
+                    document.body.appendChild(notification);
+                    
+                    setTimeout(() => {
+                        if (document.body.contains(notification)) {
+                            document.body.removeChild(notification);
+                        }
+                    }, 3000);
+                } catch (e) {
+                    console.log('Notification error:', e);
+                }
+            }
+            
+            // Animate metric cards
+            try {
+                const cards = document.querySelectorAll('.metric-card');
+                cards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, index * 100);
+                });
+            } catch (e) {
+                console.log('Animation error:', e);
+            }
+            
+            // Add button interactions
+            try {
+                const buttons = document.querySelectorAll('button');
+                buttons.forEach(button => {
+                    button.addEventListener('click', function(e) {
+                        const buttonText = this.textContent.trim();
+                        if (buttonText.includes('P&L Calculator') || 
+                            buttonText.includes('Inventory') || 
+                            buttonText.includes('Analytics') || 
+                            buttonText.includes('AI Consultant')) {
+                            e.preventDefault();
+                            showNotification(buttonText + ' - Coming soon in full version!');
+                        }
+                    });
+                });
+            } catch (e) {
+                console.log('Button error:', e);
+            }
+            
+            // Simple metric updates
+            function updateMetrics() {
+                try {
+                    const revenue = document.getElementById('revenue');
+                    if (revenue) {
+                        const current = parseFloat(revenue.textContent.replace(/[$,]/g, ''));
+                        const change = (Math.random() - 0.5) * 100;
+                        const newValue = Math.max(40000, current + change);
+                        revenue.textContent = '$' + newValue.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                    }
+                } catch (e) {
+                    console.log('Update error:', e);
+                }
+            }
+            
+            // Update every 30 seconds
+            setInterval(updateMetrics, 30000);
+            
+            // Welcome message
+            setTimeout(() => {
+                showNotification('Welcome to Odin\'s Almanac Dashboard!');
+            }, 1500);
+            
+            console.log('Dashboard loaded successfully!');
+        });
+    </script>
+</body>
+</html>

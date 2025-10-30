@@ -1,0 +1,113 @@
+name: Deploy to Azure Web App
+
+# This is a template workflow for deploying to Azure Web App
+# Configure the secrets in your GitHub repository settings before using
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '22.x'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run build (if build script exists)
+        run: |
+          if grep -q '"build":' package.json; then
+            npm run build
+          else
+            echo "No build script found, skipping build step"
+          fi
+      
+      - name: Create deployment package
+        run: |
+          # Create a zip file with all necessary files for deployment
+          # Exclude node_modules as Azure will run npm install
+          zip -r deployment.zip . -x "node_modules/*" ".git/*" ".github/*" "*.md" "logs/*"
+      
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: deployment.zip
+
+# ==============================================================================
+# CONFIGURATION INSTRUCTIONS
+# ==============================================================================
+#
+# Before using this workflow, configure the following secrets in your GitHub
+# repository settings (Settings → Secrets and variables → Actions):
+#
+# Required Secrets:
+# -----------------
+#
+# 1. AZURE_WEBAPP_NAME
+#    Description: The name of your Azure Web App
+#    Example: odinsalmanac
+#
+# 2. AZURE_WEBAPP_PUBLISH_PROFILE
+#    Description: The publish profile for your Azure Web App
+#    How to get:
+#      a. Go to Azure Portal
+#      b. Navigate to your App Service (odinsalmanac)
+#      c. Click "Get publish profile" in the Overview section
+#      d. Copy the entire contents of the downloaded file
+#      e. Add it as a secret in GitHub
+#
+# Alternative Authentication Method (using Service Principal):
+# ------------------------------------------------------------
+# Instead of publish profile, you can use Azure Service Principal:
+#
+# 1. Create a Service Principal:
+#    az ad sp create-for-rbac --name "github-actions-odinsalmanac" \
+#      --role contributor \
+#      --scopes /subscriptions/{subscription-id}/resourceGroups/DefaultResourceGroup-EUS/providers/Microsoft.Web/sites/odinsalmanac \
+#      --sdk-auth
+#
+# 2. Add these secrets to GitHub:
+#    - AZURE_CREDENTIALS (the entire JSON output from the command above)
+#
+# 3. Replace the "Deploy to Azure Web App" step with:
+#    - name: Login to Azure
+#      uses: azure/login@v1
+#      with:
+#        creds: ${{ secrets.AZURE_CREDENTIALS }}
+#    
+#    - name: Deploy to Azure Web App
+#      uses: azure/webapps-deploy@v2
+#      with:
+#        app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+#        package: deployment.zip
+#
+# Environment Variables on Azure:
+# -------------------------------
+# Remember to set environment variables on Azure App Service using:
+#   az webapp config appsettings set \
+#     --name odinsalmanac \
+#     --resource-group DefaultResourceGroup-EUS \
+#     --settings \
+#       "STRIPE_PUBLISHABLE_KEY=pk_..." \
+#       "STRIPE_SECRET_KEY=sk_..." \
+#       "DATABASE_URL=postgresql://..." \
+#       "NODE_ENV=production"
+#
+# For more information, see DEPLOYMENT-GUIDE.md
+# ==============================================================================
