@@ -3,3 +3,4 @@ server/node_modules/
 client/node_modules/
 release.zip
 node_modules/
+server/.env
