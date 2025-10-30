@@ -17,7 +17,7 @@
 ### Backend
 - **Runtime:** Node.js v20+ (CommonJS modules)
 - **Framework:** Express 5.x
-- **Database:** PostgreSQL (via Azure Cosmos DB or Neon)
+- **Database:** PostgreSQL (via Neon) and Azure Cosmos DB (NoSQL for specific features)
 - **AI Integration:** OpenAI API, Anthropic Claude API
 - **Payment Processing:** Stripe API
 - **Monitoring:** Azure Application Insights
@@ -63,6 +63,7 @@
 ├── scripts/                 # Deployment and setup scripts
 ├── docs/                   # Documentation
 ├── *.html                  # Frontend dashboards
+├── pl-calculator.js        # P&L calculation logic
 ├── server.js              # Production server entry point
 ├── server-manager.js      # Server process manager
 ├── working-ai-server.js   # Development server
@@ -106,8 +107,8 @@
 
 **Important:** Test files are located at the root and in the `server/` directory:
 - `simple-server-test.js` - Basic server tests
-- `patent-feature-tests.js` - Patent feature tests
-- `test-spreadsheet-generation.js` - Spreadsheet tests
+- `patent-feature-tests.js` - Tests for proprietary restaurant intelligence algorithms
+- `test-spreadsheet-generation.js` - Spreadsheet generation tests
 - `full_integration_test.js` - Integration tests
 - `server/test-ai-endpoints.js` - AI endpoint tests
 - `server/test-ai-integration.js` - AI integration tests
@@ -278,7 +279,7 @@ res.status(400).json({
 
 ### Generating Spreadsheets
 - Use `exceljs` library (already imported in relevant files)
-- Follow existing patterns in `pl-calculator.js`
+- Follow existing patterns in `pl-calculator.js` (root directory)
 - Test with `test-spreadsheet-generation.js`
 - Save outputs to `generated-spreadsheets/` directory
 
