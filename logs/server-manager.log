@@ -37,3 +37,9 @@
 [2025-10-28T18:43:06.646Z] [INFO] Received SIGINT (Ctrl+C), shutting down gracefully
 [2025-10-28T18:43:06.653Z] [INFO] Stopping server...
 [2025-10-28T18:43:06.686Z] [INFO] Server process closed with code null, signal SIGTERM
+[2025-10-29T23:41:17.321Z] [INFO] Starting server (attempt 1/10)
+[2025-10-29T23:41:17.332Z] [INFO] Server started with PID: 44836
+[2025-10-29T23:41:32.836Z] [INFO] Received SIGINT (Ctrl+C), shutting down gracefully
+[2025-10-29T23:41:32.838Z] [INFO] Stopping server...
+[2025-10-29T23:41:32.846Z] [INFO] Server process closed with code 3221225786, signal null
+[2025-10-29T23:41:42.841Z] [WARN] Force killing server process
