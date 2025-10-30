@@ -70,3 +70,5 @@
 {"level":"info","message":"Excel P&L Generation Request","service":"restaurant-intelligence","timestamp":"2025-10-30T04:53:55.712Z"}
 {"level":"info","message":"Excel P&L generated: PL__________etc_passwd_1761800035713.xlsx","service":"restaurant-intelligence","timestamp":"2025-10-30T04:53:55.735Z"}
 {"level":"info","message":"SIGTERM received, shutting down gracefully","service":"restaurant-intelligence","timestamp":"2025-10-30T04:54:03.129Z"}
+{"environment":"development","level":"info","message":"🏴‍☠️ Viking Restaurant Intelligence Platform started","nodeVersion":"v20.19.5","pid":4256,"port":3000,"service":"restaurant-intelligence","timestamp":"2025-10-30T04:56:59.216Z"}
+{"ip":"::1","level":"info","message":"Incoming request: GET /pl-download-demo.html","method":"GET","service":"restaurant-intelligence","timestamp":"2025-10-30T04:57:29.077Z","url":"/pl-download-demo.html","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/140.0.0.0 Safari/537.36"}
