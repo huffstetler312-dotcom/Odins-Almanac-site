@@ -62,6 +62,34 @@ npm run health
 curl http://localhost:3001/health
 ```
 
+### 7. Demo: P&L Spreadsheet Download
+Access the interactive P&L spreadsheet download demo:
+```bash
+# Open in your browser:
+http://localhost:3000/pl-download-demo.html
+```
+
+**Features:**
+- Generate downloadable Excel (.xlsx) P&L spreadsheets
+- Generate CSV files for Google Sheets import
+- Sample restaurant financial data with calculations
+- Professional formatting and structure
+
+**API Endpoints:**
+```bash
+# Generate Excel P&L
+curl -X POST http://localhost:3000/api/demo/generate-pl-excel \
+  -H "Content-Type: application/json" \
+  -d '{"restaurantName": "Your Restaurant", "year": 2025}'
+
+# Generate CSV P&L
+curl -X POST http://localhost:3000/api/demo/generate-pl-csv \
+  -H "Content-Type: application/json" \
+  -d '{"restaurantName": "Your Restaurant", "year": 2025}'
+```
+
+Generated files are saved to `generated-spreadsheets/` and accessible via `/download/[filename]`
+
 > ⚠️ **IMPORTANT SECURITY NOTE**  
 > **NEVER commit real API keys or secrets to version control!**  
 > - Use `.env.example` for documentation (with placeholders only)

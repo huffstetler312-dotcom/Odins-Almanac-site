@@ -4,6 +4,13 @@ client/node_modules/
 release.zip
 node_modules/
 
+# Generated spreadsheets (temporary files)
+generated-spreadsheets/*.xlsx
+generated-spreadsheets/*.csv
+
+# Logs
+logs/*.log
+
 # Sensitive files with tokens/keys
 *.env
 *.env.txt
