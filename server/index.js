@@ -3,7 +3,7 @@
  * Viking-themed backend with Azure Cosmos DB integration
  */
 
-require('dotenv').config();
+try { require('dotenv').config(); } catch (error) { console.log('dotenv not available, using Azure environment variables'); }
 
 const path = require('path');
 const express = require('express');
