@@ -315,13 +315,13 @@ resource appService 'Microsoft.Web/sites@2023-12-01' = {
     httpsOnly: true
     clientAffinityEnabled: false
     siteConfig: {
-      linuxFxVersion: 'NODE|18-lts'
+      linuxFxVersion: 'NODE|20-lts'
       alwaysOn: appServicePlanSku != 'B1' // Not available on Basic B1
       ftpsState: 'FtpsOnly'
       minTlsVersion: '1.2'
       scmMinTlsVersion: '1.2'
       http20Enabled: true
-      nodeVersion: '18-lts'
+      nodeVersion: '20-lts'
       appSettings: [
         {
           name: 'NODE_ENV'
@@ -329,7 +329,7 @@ resource appService 'Microsoft.Web/sites@2023-12-01' = {
         }
         {
           name: 'WEBSITE_NODE_DEFAULT_VERSION'
-          value: '18-lts'
+          value: '20-lts'
         }
         {
           name: 'PORT'
