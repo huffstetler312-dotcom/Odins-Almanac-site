@@ -73,15 +73,6 @@ const corsOptions = {
 };
 app.use(cors(corsOptions)); 
 
-// Additional CORS headers for Azure deployment compatibility
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  if (req.method === 'OPTIONS') { res.sendStatus(200); return; }
-  next();
-});
-
 // Rate limiting
 const limiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000, // 15 minutes
@@ -461,43 +452,44 @@ async function gracefulShutdown(server, signal) {
   
   try {
     // Stop accepting new connections
-    server.close(async () => {
+    server.close(() => {
       console.log('📡 HTTP server closed');
-      
-      try {
-        // Close database connections
-        await shutdownDatabase();
-        
-        // Attempt to close additional DB clients if they exist
-        if (global.dbClient && typeof global.dbClient.close === 'function') {
-          await global.dbClient.close();
-          console.log('🗄️  Global dbClient closed');
-        }
-        
-        if (global.cosmosClient && typeof global.cosmosClient.dispose === 'function') {
-          global.cosmosClient.dispose();
-          console.log('🌌 Cosmos client disposed');
-        }
-        
-        if (global.prisma && typeof global.prisma.$disconnect === 'function') {
-          await global.prisma.$disconnect();
-          console.log('🔗 Prisma client disconnected');
-        }
-        
-        if (global.pgClient && typeof global.pgClient.end === 'function') {
-          await global.pgClient.end();
-          console.log('🐘 PostgreSQL client closed');
-        }
-        
-        clearTimeout(forceExitTimer);
-        console.log('✅ Odin\'s Eye shutdown complete. Until Valhalla!');
-        process.exit(0);
-      } catch (cleanupError) {
-        console.error('❌ Error during cleanup:', cleanupError.message);
-        clearTimeout(forceExitTimer);
-        process.exit(1);
-      }
     });
+    
+    // Perform async cleanup operations
+    try {
+      // Close database connections
+      await shutdownDatabase();
+      
+      // Attempt to close additional DB clients if they exist
+      if (global.dbClient && typeof global.dbClient.close === 'function') {
+        await global.dbClient.close();
+        console.log('🗄️  Global dbClient closed');
+      }
+      
+      if (global.cosmosClient && typeof global.cosmosClient.dispose === 'function') {
+        global.cosmosClient.dispose();
+        console.log('🌌 Cosmos client disposed');
+      }
+      
+      if (global.prisma && typeof global.prisma.$disconnect === 'function') {
+        await global.prisma.$disconnect();
+        console.log('🔗 Prisma client disconnected');
+      }
+      
+      if (global.pgClient && typeof global.pgClient.end === 'function') {
+        await global.pgClient.end();
+        console.log('🐘 PostgreSQL client closed');
+      }
+      
+      clearTimeout(forceExitTimer);
+      console.log('✅ Odin\'s Eye shutdown complete. Until Valhalla!');
+      process.exit(0);
+    } catch (cleanupError) {
+      console.error('❌ Error during cleanup:', cleanupError.message);
+      clearTimeout(forceExitTimer);
+      process.exit(1);
+    }
   } catch (error) {
     console.error('❌ Error during shutdown:', error.message);
     clearTimeout(forceExitTimer);
