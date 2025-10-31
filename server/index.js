@@ -38,29 +38,40 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      scriptSrc: ["'self'", "https://js.stripe.com", "https://checkout.stripe.com", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com"],
+      connectSrc: ["'self'", "https://api.stripe.com"],
+      frameSrc: ["'self'", "https://js.stripe.com", "https://hooks.stripe.com", "https://checkout.stripe.com"],
       imgSrc: ["'self'", "data:", "https:"]
     }
   }
 }));
 
 // CORS configuration
+const allowedOrigins = [
+  process.env.NODE_ENV === 'production' ? process.env.CORS_ORIGIN : 'http://localhost:3000',
+  process.env.NODE_ENV === 'production' ? process.env.AZURE_WEBAPP_URL : null,
+  'http://localhost:3001'
+].filter(Boolean);
+
 const corsOptions = {
-  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
-  credentials: process.env.CORS_CREDENTIALS === 'true',
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl, Postman)
+    if (!origin) {
+      return callback(null, true);
+    }
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS policy: origin not allowed'));
+    }
+  },
+  credentials: true,
   optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions)); 
-
-// Additional CORS headers for Azure deployment compatibility
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  if (req.method === 'OPTIONS') { res.sendStatus(200); return; }
-  next();
-});
 
 // Rate limiting
 const limiter = rateLimit({
@@ -417,6 +428,9 @@ async function startServer() {
       console.log(`🎯 Environment: ${process.env.NODE_ENV || 'development'}`);
     });
     
+    // Export server reference for compatibility
+    module.exports.server = server;
+    
     // Graceful shutdown handlers
     process.on('SIGINT', () => gracefulShutdown(server, 'SIGINT'));
     process.on('SIGTERM', () => gracefulShutdown(server, 'SIGTERM'));
@@ -430,25 +444,61 @@ async function startServer() {
 async function gracefulShutdown(server, signal) {
   console.log(`\n🛡️ Received ${signal}. Shutting down Odin's Eye gracefully...`);
   
-  // Stop accepting new connections
-  server.close(async () => {
-    console.log('📡 HTTP server closed');
-    
-    // Close database connections
-    await shutdownDatabase();
-    
-    console.log('✅ Odin\'s Eye shutdown complete. Until Valhalla!');
-    process.exit(0);
-  });
-  
-  // Force exit after timeout
-  setTimeout(() => {
-    console.error('⚠️  Forced shutdown - some connections may not have closed gracefully');
+  // Set hard timeout for forced shutdown
+  const forceExitTimer = setTimeout(() => {
+    console.error('⚠️  Forced shutdown after 10s timeout - some connections may not have closed gracefully');
     process.exit(1);
-  }, 30000);
+  }, 10000);
+  
+  try {
+    // Stop accepting new connections
+    server.close(() => {
+      console.log('📡 HTTP server closed');
+    });
+    
+    // Perform async cleanup operations
+    try {
+      // Close database connections
+      await shutdownDatabase();
+      
+      // Attempt to close additional DB clients if they exist
+      if (global.dbClient && typeof global.dbClient.close === 'function') {
+        await global.dbClient.close();
+        console.log('🗄️  Global dbClient closed');
+      }
+      
+      if (global.cosmosClient && typeof global.cosmosClient.dispose === 'function') {
+        global.cosmosClient.dispose();
+        console.log('🌌 Cosmos client disposed');
+      }
+      
+      if (global.prisma && typeof global.prisma.$disconnect === 'function') {
+        await global.prisma.$disconnect();
+        console.log('🔗 Prisma client disconnected');
+      }
+      
+      if (global.pgClient && typeof global.pgClient.end === 'function') {
+        await global.pgClient.end();
+        console.log('🐘 PostgreSQL client closed');
+      }
+      
+      clearTimeout(forceExitTimer);
+      console.log('✅ Odin\'s Eye shutdown complete. Until Valhalla!');
+      process.exit(0);
+    } catch (cleanupError) {
+      console.error('❌ Error during cleanup:', cleanupError.message);
+      clearTimeout(forceExitTimer);
+      process.exit(1);
+    }
+  } catch (error) {
+    console.error('❌ Error during shutdown:', error.message);
+    clearTimeout(forceExitTimer);
+    process.exit(1);
+  }
 }
 
 // Start the server
 startServer();
 
 module.exports = app;
+module.exports.server = undefined; // Will be set after server starts
