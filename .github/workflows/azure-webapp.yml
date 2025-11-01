@@ -39,8 +39,12 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_006B6A88688E4509A0557C8D2EE08A51 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_9C9543B6F195411CA49F8D1E7139BF22 }}
 
+      # Deploy to Azure Web App production slot
+      # The slot-name: 'production' parameter ensures deployment goes to the main app
+      # and not to a deployment slot (which would fail with 404 if the slot doesn't exist)
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          slot-name: 'production'
           package: release.zip

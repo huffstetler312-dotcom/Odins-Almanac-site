@@ -127,6 +127,15 @@ Follow the detailed steps in [DEPLOYMENT-GUIDE.md](DEPLOYMENT-GUIDE.md)
 
 ---
 
+## 📚 Documentation
+
+- **[DEPLOYMENT-GUIDE.md](DEPLOYMENT-GUIDE.md)** - Comprehensive deployment guide with step-by-step instructions
+- **[AZURE-DEPLOYMENT-CONFIG.md](AZURE-DEPLOYMENT-CONFIG.md)** - Environment variables and configuration
+- **[AZURE-SETUP-WALKTHROUGH.md](AZURE-SETUP-WALKTHROUGH.md)** - Visual walkthrough for Azure portal setup
+- **[AZURE-DEPLOYMENT-TROUBLESHOOTING.md](AZURE-DEPLOYMENT-TROUBLESHOOTING.md)** - Common issues and solutions (including 404 slot errors)
+
+---
+
 ## ✅ Prerequisites
 
 Before running the deployment, ensure you have:
