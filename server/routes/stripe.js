@@ -64,7 +64,7 @@ router.post('/create-checkout-session', async (req, res) => {
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
       line_items: [
-        { price: priceId, quantity: 1 }
+        { price: process.env.STRIPE_PRICE_ID || priceId, quantity: 1 }
       ],
       success_url: `${baseUrl}/?success=true&plan=${plan}`,
       cancel_url: `${baseUrl}/?canceled=true&plan=${plan}`,

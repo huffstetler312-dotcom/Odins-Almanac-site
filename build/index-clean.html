@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Odin's Almanac - Restaurant Intelligence Platform</title>
+    <meta name="description" content="Viking Restaurant Consultants offers Odin's Almanac, a comprehensive restaurant intelligence platform. Our flagship Odin's Eye financial module provides advanced inventory management, cost control, and profit optimization for restaurants.">
+    <style>
+        :root {
+            --primary-bg: #1a1a2e;
+            --secondary-bg: #16213e;
+            --accent-gold: #d4af37;
+            --accent-silver: #c0c0c0;
+            --text-light: #f4f4f4;
+            --text-muted: #b0b0b0;
+            --border-color: #333;
+            --hover-bg: #0f3460;
+            --success-green: #4caf50;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            color: var(--text-light);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        header {
+            background: rgba(26, 26, 46, 0.95);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--accent-gold);
+        }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 15px; }
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-gold);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .logo-subtitle {
+            font-size: 0.9rem;
+            color: var(--accent-silver);
+            margin-top: -5px;
+        }
+        .nav-menu { display: flex; list-style: none; gap: 2rem; }
+        .nav-menu a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .nav-menu a:hover { color: var(--accent-gold); }
+        .hero {
+            padding: 120px 0 80px;
+            text-align: center;
+            background: linear-gradient(rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8));
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: var(--accent-gold);
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.7);
+        }
+        .hero h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--accent-silver);
+        }
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            color: var(--text-muted);
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--accent-gold), #b8941f);
+            color: var(--primary-bg);
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        }
+        .section { padding: 80px 0; }
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--accent-gold);
+        }
+        .section-subtitle {
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--accent-silver);
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        .feature-card {
+            background: rgba(22, 33, 62, 0.8);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-gold);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.2);
+        }
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--accent-gold);
+        }
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent-silver);
+        }
+        .demo-button {
+            background: linear-gradient(45deg, var(--accent-silver), #a0a0a0);
+            color: var(--primary-bg);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+        .demo-button:hover {
+            background: linear-gradient(45deg, var(--accent-gold), #b8941f);
+            transform: scale(1.05);
+        }
+        .pricing-card {
+            background: rgba(22, 33, 62, 0.9);
+            border: 2px solid var(--accent-gold);
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            text-align: center;
+            max-width: 500px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+        }
+        .price {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--accent-gold);
+            margin-bottom: 1rem;
+        }
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        .pricing-features li {
+            padding: 0.5rem 0;
+            color: var(--text-light);
+            position: relative;
+            padding-left: 2rem;
+        }
+        .pricing-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success-green);
+            font-weight: bold;
+        }
+        footer {
+            background: var(--primary-bg);
+            padding: 2rem 0;
+            text-align: center;
+            border-top: 2px solid var(--accent-gold);
+        }
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero h2 { font-size: 1.5rem; }
+            .nav-menu { display: none; }
+            .features-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div>
+                        <div class="logo-text">Viking Restaurant Consultants</div>
+                        <div class="logo-subtitle">Odin's Almanac | Restaurant Intelligence Platform</div>
+                    </div>
+                </div>
+                <nav>
+                    <ul class="nav-menu">
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Viking Restaurant Consultants</h1>
+            <h2>Odin's Almanac</h2>
+            <p>Introducing <strong>Odin's Eye</strong> - The most advanced restaurant financial intelligence platform. Harness the power of AI-driven inventory management, cost control, and profit optimization to conquer your restaurant's financial landscape.</p>
+            <button class="cta-button" onclick="purchaseOdinsEye()">Start Free Trial - Plans from $99/month</button>
+        </div>
+    </section>
+
+    <section id="features" class="section">
+        <div class="container">
+            <h2 class="section-title">Odin's Eye Financial Intelligence</h2>
+            <p class="section-subtitle">Complete restaurant financial management powered by advanced AI algorithms</p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>AI-Powered Spreadsheet Creator</h3>
+                    <p>Generate intelligent financial spreadsheets with advanced integration. Automated formulas, predictive analytics, and custom reporting templates.</p>
+                    <button class="demo-button" onclick="generateInventorySpreadsheet()">Try Demo</button>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3>Advanced P&L Maker</h3>
+                    <p>Comprehensive Profit & Loss statement generator with real-time data integration and AI-powered insights.</p>
+                    <button class="demo-button" onclick="generateWeeklyPL()">Try Demo</button>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🚨</div>
+                    <h3>Smart Inventory Alerts</h3>
+                    <p>Real-time inventory monitoring with intelligent alerts and predictive ordering suggestions.</p>
+                    <button class="demo-button" onclick="generateVarianceReport()">Try Demo</button>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏪</div>
+                    <h3>Complete POS Integration</h3>
+                    <p>Seamlessly connect with major POS systems. Automatic sales data synchronization and unified dashboard.</p>
+                    <button class="demo-button" onclick="checkPOSStatus()">Try Demo</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing" class="section">
+        <div class="container">
+            <h2 class="section-title">Odin's Eye Pricing</h2>
+            <div class="pricing-card">
+                <div class="price">$99</div>
+                <div style="color: var(--text-muted); font-size: 1.2rem; margin-bottom: 2rem;">per month</div>
+                <ul class="pricing-features">
+                    <li>Complete Odin's Eye Financial Platform</li>
+                    <li>AI-Powered Spreadsheet Creator</li>
+                    <li>Advanced P&L Maker & Financial Reporting</li>
+                    <li>Real-time Inventory Alerts & Smart Counter</li>
+                    <li>Full POS System Integration</li>
+                    <li>Advanced Variance Data Analysis</li>
+                    <li>24/7 Customer Support</li>
+                    <li>Free Setup & Training</li>
+                </ul>
+                <button class="cta-button" onclick="purchaseOdinsEye()">Get Started Now</button>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Viking Restaurant Consultants. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function generateInventorySpreadsheet() {
+            const csvData = `Item,Expected Quantity,Actual Quantity,Variance,Variance %
+Prime Beef,100,95,-5,-5%
+Fresh Salmon,50,48,-2,-4%
+Organic Vegetables,200,205,5,2.5%
+Dairy Products,75,70,-5,-6.7%
+Pasta Supplies,150,155,5,3.3%`;
+            
+            downloadCSV(csvData, 'inventory-analysis.csv');
+            alert('📊 Inventory Analysis Generated!\n\nYour comprehensive inventory spreadsheet has been downloaded with:\n• Current stock levels\n• Variance analysis\n• Reorder recommendations');
+        }
+
+        function generateWeeklyPL() {
+            const csvData = `Category,This Week,Last Week,Variance,Percentage
+Revenue,$25400,$23800,+$1600,+6.7%
+Food Costs,$7620,$7854,-$234,-3.0%
+Labor Costs,$8128,$7616,+$512,+6.7%
+Operating Expenses,$4318,$4284,+$34,+0.8%
+Net Profit,$5334,$3946,+$1388,+35.2%`;
+            
+            downloadCSV(csvData, 'weekly-pl-statement.csv');
+            alert('💰 Weekly P&L Generated!\n\nYour profit & loss analysis shows:\n• Revenue up 6.7%\n• Food costs optimized\n• Net profit increased 35.2%');
+        }
+
+        function generateVarianceReport() {
+            const csvData = `Item,Standard Cost,Actual Cost,Variance,Action Required
+Ribeye Steak,$18.50,$19.20,+$0.70,Monitor supplier pricing
+Chicken Breast,$4.25,$4.10,-$0.15,Excellent cost control
+Salmon Fillet,$12.00,$13.50,+$1.50,Find alternative supplier
+Vegetables,$2.80,$2.75,-$0.05,Maintain current supplier`;
+            
+            downloadCSV(csvData, 'cost-variance-analysis.csv');
+            alert('🚨 Variance Analysis Complete!\n\nKey findings:\n• Ribeye costs up 3.8%\n• Chicken costs down 3.5%\n• Salmon needs attention\n• Overall food cost variance: +2.1%');
+        }
+
+        function checkPOSStatus() {
+            alert('🏪 POS Integration Status\n\nConnected Systems:\n• Square POS - ✅ Active (Last sync: 2 min ago)\n• Toast Integration - ✅ Syncing\n• Clover Support - Available\n• Custom API - Ready\n\nAll systems operational!');
+        }
+
+        function downloadCSV(csvContent, filename) {
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function purchaseOdinsEye() {
+            fetch('/create-checkout-session', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ priceId: 'price_pro_monthly', tier: 'pro' })
+            }).then(response => response.json()).then(data => {
+                if (data.url) { 
+                    window.location = data.url; 
+                } else { 
+                    alert('Error creating checkout session. Please try again.'); 
+                }
+            }).catch(() => alert('Error processing request. Please try again.'));
+        }
+    </script>
+</body>
+</html>

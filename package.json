@@ -1,15 +1,27 @@
 {
   "name": "odins-almanac-site",
-  "version": "1.0.0", 
-  "description": "Restaurant Intelligence Platform",
-  "main": "index.js",
+  "version": "1.0.0",
+  "description": "Restaurant Intelligence Platform - Complete P&L Generation System",
+  "main": "working-server.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node working-server.js",
+    "dev": "node working-server.js",
+    "test": "node -c working-server.js"
   },
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "exceljs": "^4.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0"
   },
   "engines": {
-    "node": ">=18.0.0"
-  }
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "restaurant",
+    "analytics", 
+    "excel",
+    "reports",
+    "p&l"
+  ]
 }

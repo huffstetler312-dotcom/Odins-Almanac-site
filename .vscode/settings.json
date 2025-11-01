@@ -1,0 +1,14 @@
+{
+    "terminal.integrated.cwd": "${workspaceFolder}/server",
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    "terminal.integrated.profiles.windows": {
+        "PowerShell": {
+            "source": "PowerShell",
+            "args": [
+                "-NoExit",
+                "-Command",
+                "Set-Location '${workspaceFolder}/server'"
+            ]
+        }
+    }
+}

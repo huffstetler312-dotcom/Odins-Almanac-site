@@ -1,9 +1,13 @@
-name: Deploy Odinsalmanac server to Azure Web App
+name: Deploy Restaurant Intelligence Platform to Azure Web App
 
 on:
   push:
     branches: [ "main" ]
   workflow_dispatch:
+
+env:
+  AZURE_WEBAPP_NAME: 'Odinsalmanac'
+  NODE_VERSION: '20.x'
 
 jobs:
   build-and-deploy:
@@ -11,36 +15,60 @@ jobs:
     permissions:
       id-token: write
       contents: read
-
+    
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Use Node 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: server/package-lock.json
 
-      - name: Install server deps
-        working-directory: server
-        run: npm ci || npm install
+    - name: Install dependencies
+      run: |
+        npm ci --production --silent || npm install --production --silent
+        npm list
 
-      - name: Zip server for deployment
-        run: |
-          cd server
-          zip -r ../release.zip .
-          cd ..
-          ls -la release.zip
+    - name: Build and prepare deployment package
+      run: |
+        # Remove development files and security-sensitive files
+        rm -f .env* *.log test-*.xlsx demo-*.xlsx
+        rm -rf node_modules/.cache
+        
+        # Verify main files exist
+        ls -la working-server.js package.json web.config
+        
+        # Create release package from root (working-server.js is already in root)
+        zip -r release.zip . \
+          -i "working-server.js" \
+          -i "package.json" \
+          -i "web.config" \
+          -i "build/*" \
+          -x "*.env*" "*.log" "**/node_modules/**" "**/.git/**" "test-*.xlsx" "demo-*.xlsx"
+        
+        # Verify package contents
+        echo "📦 Package contents:"
+        unzip -l release.zip | head -20
 
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_8877547382D3441199425E8535F73C2C }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_006B6A88688E4509A0557C8D2EE08A51 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_9C9543B6F195411CA49F8D1E7139BF22 }}
+    - name: Login to Azure
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_8877547382D3441199425E8535F73C2C }}
+        tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_006B6A88688E4509A0557C8D2EE08A51 }}
+        subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_9C9543B6F195411CA49F8D1E7139BF22 }}
 
-      - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
-          package: release.zip
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        package: release.zip
+
+    - name: Verify deployment
+      run: |
+        echo "Deployment completed to https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net"
+        echo "Checking deployment status..."
+        sleep 30
+        curl -f "https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/api/status" || echo "API not yet ready"

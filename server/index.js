@@ -1,131 +1,141 @@
-const path = require('path');
-const express = require('express');
 
-// Load environment variables (optional for Azure deployment)
-try {
-  require('dotenv').config();
-} catch (error) {
-  console.log('dotenv not available, using environment variables from Azure App Service');
-}
+const express = require('express');
+const path = require('path');
+const fs = require('fs');
+const ExcelJS = require('exceljs');
 
 const app = express();
 
-// Enable CORS for Azure deployments
+// Middleware
+app.use(express.json());
+app.use(express.static(path.join(__dirname, '..', 'build')));
+
+// CORS for Azure
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  
-  // Handle preflight requests
   if (req.method === 'OPTIONS') {
     res.sendStatus(200);
     return;
   }
-  
   next();
 });
 
-app.use(express.json());
-
-// Serve static files from public
-const clientPath = path.join(__dirname, 'public');
-app.use(express.static(clientPath));
-
-// Health check
-app.get('/healthz', (_req, res) => res.status(200).send('ok'));
-
-// API Status endpoint
-app.get('/api/status', (_req, res) => {
+// API Routes
+app.get('/api/status', (req, res) => {
   res.json({
+    success: true,
     status: 'operational',
-    version: '1.0.0',
-    services: {
-      stripe: 'connected',
-      database: 'simulated',
-      pos: 'demo_mode'
-    },
+    service: 'Restaurant Intelligence Platform',
     timestamp: new Date().toISOString()
   });
 });
 
-// Demo inventory data endpoint
-app.get('/api/inventory', (_req, res) => {
+app.get('/api/inventory', (req, res) => {
   res.json({
-    items: [
-      { id: 1, name: 'Viking Ale', current: 45, par: 60, variance: -25 },
-      { id: 2, name: 'Mjolnir Mead', current: 30, par: 40, variance: -25 },
-      { id: 3, name: 'Odin\'s Bread', current: 85, par: 80, variance: +6.25 },
-      { id: 4, name: 'Berserker Beef', current: 12, par: 20, variance: -40 }
-    ],
-    totalVariance: -21.25,
-    criticalItems: 2
-  });
-});
-
-// Demo variance analysis endpoint
-app.get('/api/variance-analysis', (_req, res) => {
-  res.json({
-    analysis: {
-      totalVariance: -1247.50,
-      topVariances: [
-        { item: 'Berserker Beef', variance: -520.00, percentage: -40 },
-        { item: 'Viking Ale', variance: -375.00, percentage: -25 },
-        { item: 'Mjolnir Mead', variance: -300.00, percentage: -25 }
-      ],
-      recommendations: [
-        'Review portion sizes for Berserker Beef',
-        'Check for theft/waste in beverage storage',
-        'Implement stricter inventory controls'
-      ]
-    }
-  });
-});
-
-// Demo POS integration status
-app.get('/api/pos-status', (_req, res) => {
-  res.json({
-    integrations: [
-      { name: 'Square POS', status: 'active', lastSync: '2 minutes ago' },
-      { name: 'Toast Integration', status: 'syncing', lastSync: '5 minutes ago' },
-      { name: 'Clover Support', status: 'available', lastSync: 'Never' },
-      { name: 'Custom API', status: 'ready', lastSync: 'Real-time' }
+    success: true,
+    inventory: [
+      { item: "Prime Beef", expected: 100, actual: 95, variance: -5, cost: 500 },
+      { item: "Fresh Salmon", expected: 50, actual: 48, variance: -2, cost: 240 },
+      { item: "Organic Vegetables", expected: 200, actual: 205, variance: 5, cost: 300 }
     ]
   });
 });
 
-// Direct checkout route (for frontend compatibility)
-app.post('/create-checkout-session', async (req, res) => {
+// REAL spreadsheet generation endpoint
+app.post('/api/generate-spreadsheet', async (req, res) => {
   try {
-    const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-    const session = await stripe.checkout.sessions.create({
-      mode: 'subscription',
-      line_items: [
-        { price: process.env.STRIPE_PRICE_ID, quantity: 1 }
-      ],
-      success_url: `${process.env.APP_BASE_URL}/?success=true`,
-      cancel_url: `${process.env.APP_BASE_URL}/?canceled=true`,
+    
+    const { restaurantName, reportType } = req.body;
+    
+    // Create workbook
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Inventory Report');
+    
+    // Add headers
+    worksheet.columns = [
+      { header: 'Item', key: 'item', width: 20 },
+      { header: 'Expected', key: 'expected', width: 15 },
+      { header: 'Actual', key: 'actual', width: 15 },
+      { header: 'Variance', key: 'variance', width: 15 },
+      { header: 'Cost', key: 'cost', width: 15 }
+    ];
+    
+    // Add data
+    const inventoryData = [
+      { item: "Prime Beef", expected: 100, actual: 95, variance: -5, cost: 500 },
+      { item: "Fresh Salmon", expected: 50, actual: 48, variance: -2, cost: 240 },
+      { item: "Organic Vegetables", expected: 200, actual: 205, variance: 5, cost: 300 }
+    ];
+    
+    inventoryData.forEach(row => {
+      worksheet.addRow(row);
     });
-    res.json({ url: session.url });
-  } catch (e) {
-    console.error('Stripe error:', e);
-    res.status(500).json({ error: 'Stripe checkout error', message: e.message });
+    
+    // Style headers
+    worksheet.getRow(1).font = { bold: true };
+    worksheet.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF4472C4' } };
+    
+    // Create downloads directory if it doesn't exist
+    const downloadsDir = path.join(__dirname, '..', 'downloads');
+    if (!fs.existsSync(downloadsDir)) {
+      fs.mkdirSync(downloadsDir, { recursive: true });
+    }
+    
+    // Generate filename
+    const filename = `${restaurantName || 'Restaurant'}_${reportType || 'Report'}_${Date.now()}.xlsx`;
+    const filepath = path.join(downloadsDir, filename);
+    
+    // Save file
+    await workbook.xlsx.writeFile(filepath);
+    
+    res.json({
+      success: true,
+      message: 'Spreadsheet generated successfully',
+      filename: filename,
+      downloadUrl: `/downloads/${filename}`,
+      filepath: filepath
+    });
+    
+  } catch (error) {
+    console.error('Spreadsheet generation error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
   }
 });
 
-// Stripe routes (full API)
-const stripeRoutes = require('./routes/stripe');
-app.use('/api/stripe', stripeRoutes);
+// Serve downloads
+app.use('/downloads', express.static(path.join(__dirname, '..', 'downloads')));
 
-// Start server
+// Serve frontend for all other routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
+});
+
 const PORT = process.env.PORT || 8080;
+
+process.on('uncaughtException', (error) => {
+  console.error('💀 Uncaught Exception:', error);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('💀 Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
+});
+
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log('API endpoints available:');
-  console.log('  GET /api/status - API status');
-  console.log('  GET /api/inventory - Demo inventory data');
-  console.log('  GET /api/variance-analysis - Variance analysis');
-  console.log('  GET /api/pos-status - POS integration status');
-  console.log('  POST /create-checkout-session - Stripe checkout');
+  console.log(`🍽️ Restaurant Intelligence Platform running on port ${PORT}`);
+  console.log(`📊 ExcelJS version: ${require('exceljs/package.json').version}`);
+  console.log(`🎯 API endpoints available:`);
+  console.log(`   GET  http://localhost:${PORT}/api/status`);
+  console.log(`   GET  http://localhost:${PORT}/api/inventory`);
+  console.log(`   POST http://localhost:${PORT}/api/generate-spreadsheet`);
 });
 
 module.exports = app;
+
+
