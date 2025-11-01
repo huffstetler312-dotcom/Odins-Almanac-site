@@ -272,6 +272,285 @@ app.post('/api/ai/test-direct', async (req, res) => {
   }
 });
 
+// P&L Spreadsheet Generation - Excel (.xlsx)
+app.post('/api/demo/generate-pl-excel', async (req, res) => {
+  try {
+    const ExcelJS = require('exceljs');
+    const fs = require('fs');
+    
+    logger.info('Excel P&L Generation Request');
+    
+    // Get data from request or use defaults
+    const data = req.body || {};
+    const restaurantName = data.restaurantName || 'Sample Restaurant';
+    
+    // Generate sample P&L data
+    const plData = {
+      restaurantName,
+      year: data.year || new Date().getFullYear(),
+      revenue: {
+        food: data.foodSales || 800000,
+        beverage: data.beverageSales || 200000,
+        other: data.otherRevenue || 50000
+      },
+      costs: {
+        foodCost: data.foodCost || 224000,
+        beverageCost: data.beverageCost || 50000,
+        laborCost: data.laborCost || 315000,
+        rent: data.rent || 80000,
+        utilities: data.utilities || 42000,
+        marketing: data.marketing || 21000,
+        supplies: data.supplies || 31500,
+        insurance: data.insurance || 15000,
+        other: data.otherExpenses || 20000
+      }
+    };
+    
+    // Calculate totals
+    plData.totalRevenue = plData.revenue.food + plData.revenue.beverage + plData.revenue.other;
+    plData.totalCOGS = plData.costs.foodCost + plData.costs.beverageCost;
+    plData.grossProfit = plData.totalRevenue - plData.totalCOGS;
+    plData.totalOperatingExpenses = plData.costs.laborCost + plData.costs.rent + 
+                                    plData.costs.utilities + plData.costs.marketing + 
+                                    plData.costs.supplies + plData.costs.insurance + 
+                                    plData.costs.other;
+    plData.netProfit = plData.grossProfit - plData.totalOperatingExpenses;
+    
+    // Create workbook
+    const workbook = new ExcelJS.Workbook();
+    workbook.creator = 'Viking Restaurant Consultants';
+    workbook.created = new Date();
+    
+    // Add worksheet
+    const worksheet = workbook.addWorksheet('P&L Statement');
+    
+    // Set column widths
+    worksheet.columns = [
+      { key: 'description', width: 35 },
+      { key: 'amount', width: 15 }
+    ];
+    
+    // Add header
+    worksheet.mergeCells('A1:B1');
+    const titleCell = worksheet.getCell('A1');
+    titleCell.value = `${plData.restaurantName} - Profit & Loss Statement`;
+    titleCell.font = { size: 16, bold: true };
+    titleCell.alignment = { horizontal: 'center' };
+    
+    worksheet.mergeCells('A2:B2');
+    const yearCell = worksheet.getCell('A2');
+    yearCell.value = `Year: ${plData.year}`;
+    yearCell.font = { size: 12 };
+    yearCell.alignment = { horizontal: 'center' };
+    
+    worksheet.addRow([]);
+    
+    // Revenue Section
+    worksheet.addRow(['REVENUE', '']).font = { bold: true, size: 12 };
+    worksheet.addRow(['Food Sales', plData.revenue.food]);
+    worksheet.addRow(['Beverage Sales', plData.revenue.beverage]);
+    worksheet.addRow(['Other Revenue', plData.revenue.other]);
+    const totalRevenueRow = worksheet.addRow(['Total Revenue', plData.totalRevenue]);
+    totalRevenueRow.font = { bold: true };
+    totalRevenueRow.getCell(2).numFmt = '$#,##0.00';
+    
+    worksheet.addRow([]);
+    
+    // COGS Section
+    worksheet.addRow(['COST OF GOODS SOLD', '']).font = { bold: true, size: 12 };
+    worksheet.addRow(['Food Cost', plData.costs.foodCost]);
+    worksheet.addRow(['Beverage Cost', plData.costs.beverageCost]);
+    const totalCOGSRow = worksheet.addRow(['Total COGS', plData.totalCOGS]);
+    totalCOGSRow.font = { bold: true };
+    totalCOGSRow.getCell(2).numFmt = '$#,##0.00';
+    
+    worksheet.addRow([]);
+    
+    const grossProfitRow = worksheet.addRow(['GROSS PROFIT', plData.grossProfit]);
+    grossProfitRow.font = { bold: true, size: 12 };
+    grossProfitRow.getCell(2).numFmt = '$#,##0.00';
+    
+    worksheet.addRow([]);
+    
+    // Operating Expenses Section
+    worksheet.addRow(['OPERATING EXPENSES', '']).font = { bold: true, size: 12 };
+    worksheet.addRow(['Labor Cost', plData.costs.laborCost]);
+    worksheet.addRow(['Rent', plData.costs.rent]);
+    worksheet.addRow(['Utilities', plData.costs.utilities]);
+    worksheet.addRow(['Marketing', plData.costs.marketing]);
+    worksheet.addRow(['Supplies', plData.costs.supplies]);
+    worksheet.addRow(['Insurance', plData.costs.insurance]);
+    worksheet.addRow(['Other Expenses', plData.costs.other]);
+    const totalOpExRow = worksheet.addRow(['Total Operating Expenses', plData.totalOperatingExpenses]);
+    totalOpExRow.font = { bold: true };
+    totalOpExRow.getCell(2).numFmt = '$#,##0.00';
+    
+    worksheet.addRow([]);
+    
+    const netProfitRow = worksheet.addRow(['NET PROFIT', plData.netProfit]);
+    netProfitRow.font = { bold: true, size: 14 };
+    netProfitRow.getCell(2).numFmt = '$#,##0.00';
+    netProfitRow.fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: plData.netProfit >= 0 ? 'FFD4EDDA' : 'FFF8D7DA' }
+    };
+    
+    // Format all amount cells
+    worksheet.eachRow((row, rowNumber) => {
+      if (rowNumber > 3) {
+        const amountCell = row.getCell(2);
+        if (amountCell.value && typeof amountCell.value === 'number') {
+          amountCell.numFmt = '$#,##0.00';
+        }
+      }
+    });
+    
+    // Ensure generated-spreadsheets directory exists
+    const outputDir = path.join(__dirname, 'generated-spreadsheets');
+    if (!fs.existsSync(outputDir)) {
+      fs.mkdirSync(outputDir, { recursive: true });
+    }
+    
+    // Generate filename with proper sanitization to prevent path injection
+    const timestamp = Date.now();
+    const sanitizedName = restaurantName.replace(/[^a-z0-9]/gi, '_').substring(0, 50);
+    // Use path.basename() as defense-in-depth to ensure no path separators in filename
+    const filename = path.basename(`PL_${sanitizedName}_${timestamp}.xlsx`);
+    const filepath = path.join(outputDir, filename);
+    
+    // Write file
+    await workbook.xlsx.writeFile(filepath);
+    
+    logger.info(`Excel P&L generated: ${filename}`);
+    
+    res.json({
+      success: true,
+      filename,
+      downloadUrl: `/download/${filename}`,
+      data: plData
+    });
+    
+  } catch (error) {
+    logger.error('Excel P&L generation error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to generate Excel P&L spreadsheet',
+      message: error.message
+    });
+  }
+});
+
+// P&L Spreadsheet Generation - CSV (for Google Sheets)
+app.post('/api/demo/generate-pl-csv', async (req, res) => {
+  try {
+    const fs = require('fs');
+    
+    logger.info('CSV P&L Generation Request');
+    
+    // Get data from request or use defaults
+    const data = req.body || {};
+    const restaurantName = data.restaurantName || 'Sample Restaurant';
+    
+    // Generate sample P&L data
+    const plData = {
+      restaurantName,
+      year: data.year || new Date().getFullYear(),
+      revenue: {
+        food: data.foodSales || 800000,
+        beverage: data.beverageSales || 200000,
+        other: data.otherRevenue || 50000
+      },
+      costs: {
+        foodCost: data.foodCost || 224000,
+        beverageCost: data.beverageCost || 50000,
+        laborCost: data.laborCost || 315000,
+        rent: data.rent || 80000,
+        utilities: data.utilities || 42000,
+        marketing: data.marketing || 21000,
+        supplies: data.supplies || 31500,
+        insurance: data.insurance || 15000,
+        other: data.otherExpenses || 20000
+      }
+    };
+    
+    // Calculate totals
+    plData.totalRevenue = plData.revenue.food + plData.revenue.beverage + plData.revenue.other;
+    plData.totalCOGS = plData.costs.foodCost + plData.costs.beverageCost;
+    plData.grossProfit = plData.totalRevenue - plData.totalCOGS;
+    plData.totalOperatingExpenses = plData.costs.laborCost + plData.costs.rent + 
+                                    plData.costs.utilities + plData.costs.marketing + 
+                                    plData.costs.supplies + plData.costs.insurance + 
+                                    plData.costs.other;
+    plData.netProfit = plData.grossProfit - plData.totalOperatingExpenses;
+    
+    // Create CSV content
+    const csvLines = [];
+    csvLines.push(`"${plData.restaurantName} - Profit & Loss Statement"`);
+    csvLines.push(`"Year: ${plData.year}"`);
+    csvLines.push('');
+    csvLines.push('"REVENUE",""');
+    csvLines.push(`"Food Sales","${plData.revenue.food}"`);
+    csvLines.push(`"Beverage Sales","${plData.revenue.beverage}"`);
+    csvLines.push(`"Other Revenue","${plData.revenue.other}"`);
+    csvLines.push(`"Total Revenue","${plData.totalRevenue}"`);
+    csvLines.push('');
+    csvLines.push('"COST OF GOODS SOLD",""');
+    csvLines.push(`"Food Cost","${plData.costs.foodCost}"`);
+    csvLines.push(`"Beverage Cost","${plData.costs.beverageCost}"`);
+    csvLines.push(`"Total COGS","${plData.totalCOGS}"`);
+    csvLines.push('');
+    csvLines.push(`"GROSS PROFIT","${plData.grossProfit}"`);
+    csvLines.push('');
+    csvLines.push('"OPERATING EXPENSES",""');
+    csvLines.push(`"Labor Cost","${plData.costs.laborCost}"`);
+    csvLines.push(`"Rent","${plData.costs.rent}"`);
+    csvLines.push(`"Utilities","${plData.costs.utilities}"`);
+    csvLines.push(`"Marketing","${plData.costs.marketing}"`);
+    csvLines.push(`"Supplies","${plData.costs.supplies}"`);
+    csvLines.push(`"Insurance","${plData.costs.insurance}"`);
+    csvLines.push(`"Other Expenses","${plData.costs.other}"`);
+    csvLines.push(`"Total Operating Expenses","${plData.totalOperatingExpenses}"`);
+    csvLines.push('');
+    csvLines.push(`"NET PROFIT","${plData.netProfit}"`);
+    
+    const csvContent = csvLines.join('\n');
+    
+    // Ensure generated-spreadsheets directory exists
+    const outputDir = path.join(__dirname, 'generated-spreadsheets');
+    if (!fs.existsSync(outputDir)) {
+      fs.mkdirSync(outputDir, { recursive: true });
+    }
+    
+    // Generate filename with proper sanitization to prevent path injection
+    const timestamp = Date.now();
+    const sanitizedName = restaurantName.replace(/[^a-z0-9]/gi, '_').substring(0, 50);
+    // Use path.basename() as defense-in-depth to ensure no path separators in filename
+    const filename = path.basename(`PL_${sanitizedName}_${timestamp}.csv`);
+    const filepath = path.join(outputDir, filename);
+    
+    // Write file
+    fs.writeFileSync(filepath, csvContent, 'utf8');
+    
+    logger.info(`CSV P&L generated: ${filename}`);
+    
+    res.json({
+      success: true,
+      filename,
+      downloadUrl: `/download/${filename}`,
+      data: plData
+    });
+    
+  } catch (error) {
+    logger.error('CSV P&L generation error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to generate CSV P&L spreadsheet',
+      message: error.message
+    });
+  }
+});
+
 // Stripe Checkout Session - CREATE SUBSCRIPTION
 app.post('/api/create-checkout-session', async (req, res) => {
   try {

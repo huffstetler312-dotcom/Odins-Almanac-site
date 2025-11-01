@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P&L Spreadsheet Download Demo - Viking Restaurant Consultants</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+        
+        .title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .demo-card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        .feature-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2d3748;
+        }
+        
+        .feature-description {
+            color: #718096;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #4a5568;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .download-button {
+            padding: 16px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .excel-button {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+        
+        .excel-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+        
+        .csv-button {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+        }
+        
+        .csv-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+        
+        .download-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .message.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #10b981;
+        }
+        
+        .message.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #ef4444;
+        }
+        
+        .message.show {
+            display: block;
+        }
+        
+        .icon {
+            font-size: 20px;
+        }
+        
+        .info-box {
+            background: #f0f9ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            color: #1e40af;
+            font-size: 14px;
+        }
+        
+        .info-box strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🛡️ Odin's Eye</h1>
+            <p class="subtitle">P&L Spreadsheet Download Demo</p>
+        </div>
+        
+        <div class="demo-card">
+            <h2 class="feature-title">Generate P&L Spreadsheet</h2>
+            <p class="feature-description">
+                Generate a comprehensive Profit & Loss statement for your restaurant. 
+                Download in Excel format (.xlsx) or CSV format (compatible with Google Sheets).
+            </p>
+            
+            <div class="form-section">
+                <div class="input-group">
+                    <label class="input-label" for="restaurantName">Restaurant Name</label>
+                    <input type="text" id="restaurantName" class="input-field" 
+                           value="Viking's Feast" placeholder="Enter restaurant name">
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label" for="year">Year</label>
+                    <input type="number" id="year" class="input-field" 
+                           value="2025" placeholder="2025">
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button class="download-button excel-button" id="downloadExcel">
+                    <span class="icon">📊</span>
+                    Download Excel
+                </button>
+                <button class="download-button csv-button" id="downloadCSV">
+                    <span class="icon">📄</span>
+                    Download CSV
+                </button>
+            </div>
+            
+            <div id="message" class="message"></div>
+            
+            <div class="info-box">
+                <strong>💡 What you'll get:</strong>
+                • Complete P&L statement with sample data<br>
+                • Revenue breakdown (Food, Beverage, Other)<br>
+                • Cost of Goods Sold analysis<br>
+                • Operating expenses detail<br>
+                • Net profit calculation<br>
+                • Professional formatting
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const messageDiv = document.getElementById('message');
+        const excelButton = document.getElementById('downloadExcel');
+        const csvButton = document.getElementById('downloadCSV');
+        
+        function showMessage(text, type) {
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type} show`;
+            setTimeout(() => {
+                messageDiv.className = 'message';
+            }, 5000);
+        }
+        
+        function downloadFile(url, filename) {
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        async function generateSpreadsheet(format) {
+            const button = format === 'excel' ? excelButton : csvButton;
+            const endpoint = format === 'excel' ? '/api/demo/generate-pl-excel' : '/api/demo/generate-pl-csv';
+            
+            button.disabled = true;
+            button.textContent = 'Generating...';
+            
+            try {
+                const restaurantName = document.getElementById('restaurantName').value || 'Sample Restaurant';
+                const year = document.getElementById('year').value || new Date().getFullYear();
+                
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        restaurantName,
+                        year: parseInt(year)
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage(`✅ ${format === 'excel' ? 'Excel' : 'CSV'} file generated successfully! Downloading...`, 'success');
+                    
+                    // Trigger download
+                    setTimeout(() => {
+                        downloadFile(data.downloadUrl, data.filename);
+                    }, 500);
+                } else {
+                    showMessage(`❌ Error: ${data.error || 'Failed to generate file'}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`❌ Error: ${error.message}`, 'error');
+            } finally {
+                button.disabled = false;
+                button.innerHTML = format === 'excel' 
+                    ? '<span class="icon">📊</span> Download Excel'
+                    : '<span class="icon">📄</span> Download CSV';
+            }
+        }
+        
+        excelButton.addEventListener('click', () => generateSpreadsheet('excel'));
+        csvButton.addEventListener('click', () => generateSpreadsheet('csv'));
+    </script>
+</body>
+</html>
